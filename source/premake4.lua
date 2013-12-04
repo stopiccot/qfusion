@@ -1,6 +1,10 @@
 solution "qfusion"
     configurations { "Debug", "Release" }
-    platforms { "x32", "x64" }
+    if os.is("macosx") then
+        platforms { "native" }
+    else
+        platforms { "x32", "x64" }
+    end
 
     function qf_targetdir(dir)
         cfg = configuration()
@@ -58,6 +62,11 @@ solution "qfusion"
         flags   { "Optimize" }
         libdirs { "win32/x86/lib/release" }
 
+    configuration "macosx"
+        if os.is("macosx") then
+            frameworkdirs { "mac/Frameworks" }
+        end
+
     include "angelwrap"
     include "cgame"
     include "cin"
@@ -78,7 +87,7 @@ solution "qfusion"
         flags   { "WinMain"}
 
         configuration "vs*"
-            libdirs { os.getenv("DXSDK_DIR") .. "Lib/x86" }
+            libdirs { "$(DXSDK_DIR)/Lib/x86" }
         configuration {}
         
         files {
@@ -217,27 +226,66 @@ solution "qfusion"
             "gameshared/q_trie.c",
             "qcommon/webdownload.c",
             "qcommon/wswcurl.c",
-
-            "win32/win_glw.h",
-            "win32/winquake.h",
-            "win32/conproc.c",
-            "win32/win_fs.c",
-            "win32/win_input.c",
-            "win32/win_lib.c",
-            "win32/win_net.c",
-            "win32/win_sys.c",
-            "win32/win_vid.c",
-            "win32/qfusion.rc",
         }
 
-        links {
-            "cin",
-            "libcurlstat",
-            "zlibstat",
-            "winmm",
-            "ws2_32",
-            "dxguid",
-        }
+        configuration "windows"
+            files {
+                "win32/win_glw.h",
+                "win32/winquake.h",
+                "win32/conproc.c",
+                "win32/win_fs.c",
+                "win32/win_input.c",
+                "win32/win_lib.c",
+                "win32/win_net.c",
+                "win32/win_sys.c",
+                "win32/win_vid.c",
+                "win32/qfusion.rc",
+            }
+
+            links { "cin", "libcurlstat", "zlibstat", "winmm", "ws2_32", "dxguid" }
+
+        configuration "macosx"
+
+            defines { "REF_HARD_LINKED" }
+
+            files {
+                "unix/unix_fs.c",
+                "unix/unix_sys.c",
+                "unix/unix_lib.c",
+                "unix/unix_net.c",
+                "unix/unix_xpm.c",
+                "mac/mac_input.m",
+                "mac/mac_glw.h",
+                "mac/mac_glw.m",
+                "mac/mac_qgl.c",
+                "mac/mac_vid.m",
+                "mac/SDLMain.h",
+                "mac/SDLMain.m",
+                "mac/wsw_icon.icns",
+                "mac/Warsow SDL-Info.plist"
+            }
+
+            -- ref_gl sources
+            files    { 
+                "ref_gl/*.h",
+                "cgame/ref.h",
+                "gameshared/anorms.h",
+                "gameshared/config.h",
+                "gameshared/q_arch.h",
+                "gameshared/q_cvar.h",
+                "gameshared/q_math.h",
+                "gameshared/q_shared.h",
+                "qcommon/patch.h",
+                "gameshared/q_trie.h",
+                "ref_gl/*.c",
+                "gameshared/q_math.c",
+                "gameshared/q_shared.c",
+                "qcommon/bsp.c",
+                "qcommon/patch.c",
+                "gameshared/q_trie.c",
+            }
+
+            links { "cin", "libcurl.framework", "SDL.framework", "IOKit.framework", "png.framework", "jpeg.framework", "Cocoa.framework", "z"}
 
     project "qfusion_server"
 

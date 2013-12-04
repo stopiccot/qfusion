@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "r_local.h"
 
 #if defined ( __MACOSX__ )
-#include "libjpeg/jpeglib.h"
+#include "jpeg/jpeglib.h"
 #include "png/png.h"
 #else
 #include "jpeglib.h"

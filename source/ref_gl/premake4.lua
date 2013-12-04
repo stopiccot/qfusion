@@ -15,19 +15,28 @@ project "ref_gl"
         "../gameshared/q_shared.h",
         "../qcommon/patch.h",
         "../gameshared/q_trie.h",
-        "../win32/win_glw.h",
         "*.c",
         "../gameshared/q_math.c",
         "../gameshared/q_shared.c",
         "../qcommon/bsp.c",
         "../qcommon/patch.c",
         "../gameshared/q_trie.c",
-        "../win32/win_glw.c",
-        "../win32/win_qgl.c",
     }
 
-    links {
-        "libpngstat",
-        "libjpegstat",
-        "zlibstat"
-    }
+    configuration "windows"
+        files {
+            "../win32/win_glw.h",
+            "../win32/win_glw.c",
+            "../win32/win_qgl.c",
+        }
+
+        links { "libpngstat", "libjpegstat", "zlibstat" }
+
+    configuration "macosx"
+        files {
+            "../mac/mac_glw.h",
+            "../mac/mac_glw.m",
+            "../mac/mac_qgl.c",
+        }
+
+        links { "png.framework", "jpeg.framework", "SDL.framework" }

@@ -13,6 +13,10 @@ project "ftlib"
         "../gameshared/q_shared.c",
     }
 
-    links {
-        "libfreetypestat"
-    }
+    configuration "windows"
+        links { "libfreetypestat" }
+
+    configuration "macosx"
+        links { "FreeType.framework" }
+        includedirs { "../mac/Frameworks/FreeType.framework/Headers"}
+            

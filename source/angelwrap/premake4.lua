@@ -17,6 +17,8 @@ project "angelwrap"
         "../gameshared/q_shared.c",
     }
 
-    links {
-        "angelscript"
-    }
+    configuration "windows"
+        links { "angelscript" }
+
+    configuration "macosx"
+        links { "angelscript.framework" }

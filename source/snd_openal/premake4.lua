@@ -14,8 +14,9 @@ project "snd_openal"
         "../gameshared/q_shared.c",
     }
 
-    links {
-        "libogg_static",
-        "libvorbis_static",
-        "libvorbisfile_static",
-    }
+    configuration "windows"
+        links { "libogg_static", "libvorbis_static", "libvorbisfile_static" }
+
+    configuration "macosx"
+        links { "Ogg.framework", "Vorbis.framework" }
+        

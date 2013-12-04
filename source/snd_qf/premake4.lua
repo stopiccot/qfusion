@@ -12,12 +12,12 @@ project "snd_qf"
         "*.c",
         "../gameshared/q_math.c",
         "../gameshared/q_shared.c",
-        "../win32/win_snd.c"
     }
 
-    links {
-        "libogg_static",
-        "libvorbis_static",
-        "libvorbisfile_static",
-        "winmm"
-    }
+    configuration "windows"
+        files { "../win32/win_snd.c" }
+        links { "libogg_static", "libvorbis_static", "libvorbisfile_static", "libtheora_static", "winmm" }
+
+    configuration "macosx"
+        files { "../unix/unix_snd.c" }
+        links { "Ogg.framework", "Vorbis.framework", "SDL.framework" }

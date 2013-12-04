@@ -10,6 +10,7 @@ project "irc"
         "../gameshared/q_shared.c",
     }
 
-    links {
-        "ws2_32"
-    }
+    configuration "windows"
+        links { "ws2_32" }
+
+    configuration "macosx"
