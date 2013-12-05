@@ -28,12 +28,6 @@ solution "qfusion"
         objdir    "build/release/obj"
         defines   { "NDEBUG" }
 
-    configuration "x32"
-        targetsuffix "_x86"
-
-    configuration "x64"
-        targetsuffix "_x64"
-
     configuration "vs*"
         flags { "StaticRuntime" }
         -- buildoptions { "/NODEFAULTLIB:\"libcmt\"" }
@@ -54,6 +48,12 @@ solution "qfusion"
             "win32/include",
         }
 
+    configuration {"vs*", "x64"}
+        targetsuffix "_x64"
+
+    configuration {"vs*", "x32"}
+        targetsuffix "_x86"
+
     configuration {"vs*", "Debug"}
         flags   { "Symbols" }
         libdirs { "win32/x86/lib/debug" }
@@ -63,6 +63,7 @@ solution "qfusion"
         libdirs { "win32/x86/lib/release" }
 
     configuration "macosx"
+        targetsuffix "_mac"
         if os.is("macosx") then
             frameworkdirs { "mac/Frameworks" }
         end
