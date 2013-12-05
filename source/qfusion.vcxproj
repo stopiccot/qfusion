@@ -90,7 +90,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>win32\include\msvc;win32\include;..\libsrcs\zlib;..\libsrcs\libcurl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>win32\include\msvc;win32\include;..\libsrcs\zlib;..\libsrcs\libcurl\include;..\libsrcs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CURL_STATICLIB;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>
       </ExceptionHandling>
@@ -117,7 +117,7 @@
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
     <Link>
-      <AdditionalDependencies>winmm.lib;ws2_32.lib;zlibstat.lib;dxguid.lib;libcurlstat.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;ws2_32.lib;zlibstat.lib;dxguid.lib;libcurlstat.lib;SDL2.lib;SDL2main.lib;imm32.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>win32\$(PlatformShortName)\lib\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -134,8 +134,7 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>copy .\win32\x86\lib\debug\SDL2.dll .\Debug\x86\SDL2.dll</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -158,7 +157,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>win32\include\msvc;win32\include;..\libsrcs\zlib;..\libsrcs\libcurl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>win32\include\msvc;win32\include;..\libsrcs\zlib;..\libsrcs\libcurl\include;..\libsrcs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;CURL_STATICLIB;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
@@ -186,7 +185,7 @@
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
     <Link>
-      <AdditionalDependencies>winmm.lib;ws2_32.lib;zlibstat.lib;dxguid.lib;libcurlstat.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;ws2_32.lib;zlibstat.lib;dxguid.lib;libcurlstat.lib;SDL2_static.lib;SDL2main.lib;imm32.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>win32\$(PlatformShortName)\lib\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -202,8 +201,7 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>copy .\win32\x86\lib\release\SDL2.dll .\Debug\x86\SDL2.dll</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -234,6 +232,11 @@
     <ClCompile Include="qcommon\common.c">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">svnrev.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
+    <ClCompile Include="sdl\sdl_input.c" />
+    <ClCompile Include="sdl\sdl_lib.c" />
+    <ClCompile Include="sdl\sdl_sys.c" />
+    <ClCompile Include="sdl\sdl_sys_win32.c" />
+    <ClCompile Include="sdl\sdl_vid.c" />
     <ClCompile Include="server\sv_web.c" />
     <ClCompile Include="win32\conproc.c" />
     <ClCompile Include="client\console.c" />
@@ -275,11 +278,7 @@
     <ClCompile Include="gameshared\q_trie.c" />
     <ClCompile Include="qcommon\webdownload.c" />
     <ClCompile Include="win32\win_fs.c" />
-    <ClCompile Include="win32\win_input.c" />
-    <ClCompile Include="win32\win_lib.c" />
     <ClCompile Include="win32\win_net.c" />
-    <ClCompile Include="win32\win_sys.c" />
-    <ClCompile Include="win32\win_vid.c" />
     <ClCompile Include="qcommon\wswcurl.c" />
   </ItemGroup>
   <ItemGroup>

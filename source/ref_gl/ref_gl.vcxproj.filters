@@ -99,12 +99,6 @@
     <ClCompile Include="..\gameshared\q_shared.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\win32\win_glw.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\win32\win_qgl.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\qcommon\patch.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -115,6 +109,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\gameshared\q_trie.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sdl\sdl_glw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sdl\sdl_qgl.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -201,19 +201,7 @@
     <ClCompile Include="win32\win_fs.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="win32\win_input.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="win32\win_lib.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="win32\win_net.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="win32\win_sys.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="win32\win_vid.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="qcommon\wswcurl.c">
@@ -229,6 +217,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="client\l10n.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sdl\sdl_lib.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sdl\sdl_sys.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sdl\sdl_vid.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sdl\sdl_input.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sdl\sdl_sys_win32.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
