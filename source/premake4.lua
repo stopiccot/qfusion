@@ -285,7 +285,7 @@ solution "qfusion"
                 "gameshared/q_trie.c",
             }
 
-            links { "cin", "libcurl.framework", "SDL.framework", "IOKit.framework", "png.framework", "jpeg.framework", "Cocoa.framework", "z"}
+            links { "cin", "libcurl.framework", "SDL.framework", "IOKit.framework", "libpng.framework", "jpeg.framework", "Cocoa.framework", "z"}
 
     project "qfusion_server"
 

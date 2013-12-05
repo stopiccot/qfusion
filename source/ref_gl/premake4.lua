@@ -39,4 +39,4 @@ project "ref_gl"
             "../mac/mac_qgl.c",
         }
 
-        links { "png.framework", "jpeg.framework", "SDL.framework" }
+        links { "libpng.framework", "jpeg.framework", "SDL.framework" }
