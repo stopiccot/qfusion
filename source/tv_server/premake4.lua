@@ -60,7 +60,7 @@ project "tv_server"
         "../qcommon/svnrev.c",
         "../gameshared/q_trie.c",
         "../win32/win_fs.c",
-        "../win32/win_lib.c",
+        "../sdl/sdl_lib.c",
         "../win32/win_net.c",
         "../win32/win_sys.c",
         "../qcommon/wswcurl.c",

@@ -59,7 +59,7 @@
 #include <stdio.h>
 
 #if defined ( __APPLE__ )
-#include "SDL/SDL.h"
+#include "SDL2/SDL.h"
 #else
 #include "SDL.h"
 #endif
@@ -176,8 +176,11 @@ qboolean SNDDMA_Init( void *hwnd, qboolean verbose )
 			Com_Printf( "SDL_Init(SDL_INIT_AUDIO) passed.\n" );
 	}
 
-	if( SDL_AudioDriverName( drivername, sizeof( drivername ) ) == NULL )
+    if( SDL_GetCurrentAudioDriver() != NULL )
+        Q_strncpyz( drivername, SDL_GetCurrentAudioDriver(), sizeof( drivername ) );
+    else
 		Q_strncpyz( drivername, "(UNKNOWN)", sizeof( drivername ) );
+    
 	if( verbose )
 		Com_Printf( "SDL audio driver is \"%s\"\n", drivername );
 
