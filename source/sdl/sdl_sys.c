@@ -623,17 +623,11 @@ void IN_MouseMove( usercmd_t *cmd )
 	mx = my= 0;
 }
 
-#include <unistd.h>
-
-
 int main( int argc, char **argv )
 {
 	unsigned int oldtime, newtime, time;
 
 	SDL_Init(SDL_INIT_VIDEO);
-    
-    char buf[10240];
-    getcwd(buf, 10240);
 
 	Qcommon_Init( argc, argv );
 
