@@ -241,6 +241,12 @@ solution "qfusion"
             links { "cin", "libcurlstat", "zlibstat", "winmm", "ws2_32", "dxguid", "SDL2", "SDL2main" }
 
         configuration "macosx"
+            files {
+                "sdl/sdl_sys_mac.c",
+                "unix/unix_fs.c",
+                "unix/unix_net.c",
+            }
+
             links { "cin", "libcurl.framework", "SDL2.framework", "IOKit.framework", "libpng.framework", "jpeg.framework", "Cocoa.framework", "z"}
 
     project "qfusion_server"

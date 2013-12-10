@@ -23,9 +23,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <assert.h>
 #include <float.h>
 #include "../client/client.h"
-#include "../win32/winquake.h"
+//#include "../win32/winquake.h"
 
-static UINT MSH_MOUSEWHEEL;
+//static UINT MSH_MOUSEWHEEL;
 
 // Console variables that we need to access from this module
 extern cvar_t *vid_xpos;          // X coordinate of window position
@@ -35,8 +35,8 @@ extern cvar_t *win_noalttab;
 extern cvar_t *win_nowinkeys;
 
 // Global variables used internally by this module
-HWND cl_hwnd;           // Main window handle for life of program
-HWND cl_parent_hwnd;	// pointer to parent window handle
+//HWND cl_hwnd;           // Main window handle for life of program
+//HWND cl_parent_hwnd;	// pointer to parent window handle
 
 //static HHOOK WinKeyHook;
 static qboolean s_winkeys_hooked;
@@ -150,7 +150,7 @@ DLL GLUE
 */
 
 // wsw : pb :  start of paste from Q3
-static byte s_scantokey[128] =
+static qbyte s_scantokey[128] =
 {
 	//  0           1       2       3       4       5       6       7
 	//  8           9       A       B       C       D       E       F
@@ -494,7 +494,7 @@ int IN_MapKey( int key )
 */
 void *VID_GetWindowHandle( void )
 {
-	return ( void * )cl_hwnd;
+	return NULL;//( void * )cl_hwnd;
 }
 
 /*
@@ -504,7 +504,7 @@ rserr_t VID_Sys_Init( int x, int y, int width, int height, int displayFrequency,
 	void *parentWindow, qboolean fullScreen, qboolean wideScreen, qboolean verbose )
 {
 	return re.Init( APPLICATION, APP_SCREENSHOTS_PREFIX,
-		global_hInstance, NULL, parentWindow, 
+		NULL, NULL, parentWindow,
 		x, y, width, height, displayFrequency,
 		fullScreen, wideScreen, verbose );
 }

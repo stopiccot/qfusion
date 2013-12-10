@@ -2,3 +2,4 @@ questions:
 -- parent window
 -- conproc\qhost
 -- joystick input
+-- EXT_texture_edge_clamp on OS X

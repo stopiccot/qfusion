@@ -20,38 +20,41 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // sys_win.h
 
 #include "../qcommon/qcommon.h"
-#include "../win32/winquake.h"
-#include "../win32/resource.h"
+//#include "../win32/winquake.h"
+//#include "../win32/resource.h"
 #include <errno.h>
 #include <float.h>
 #include <fcntl.h>
 #include <stdio.h>
-#include <io.h>
-#include <conio.h>
+//#include <io.h>
+//#include <conio.h>
 #include <limits.h>
 
-#include "SDL.h"
-#include "../win32/conproc.h"
+#ifndef _WIN32
+    #include "SDL2/SDL.h"
+#else
+    #include "SDL.h"
+#endif
+
+//#include "../win32/conproc.h"
 
 #include "../client/client.h"
 
 #define MINIMUM_WIN_MEMORY  0x0a00000
 #define MAXIMUM_WIN_MEMORY  0x1000000
 
-qboolean s_win95;
-
 int starttime;
 int ActiveApp;
 int Minimized;
 int AppFocused;
 
-static HANDLE hinput, houtput;
+//static HANDLE hinput, houtput;
 
 unsigned sys_msg_time;
 unsigned sys_frame_time;
 
 
-static HANDLE qwclsemaphore;
+//static HANDLE qwclsemaphore;
 
 #define	MAX_NUM_ARGVS	128
 int argc;
@@ -78,8 +81,8 @@ void Sys_Error( const char *format, ... )
 
 	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "qfusion", msg, NULL);
 
-	if( qwclsemaphore )
-		CloseHandle( qwclsemaphore );
+//	if( qwclsemaphore )
+//		CloseHandle( qwclsemaphore );
 
 	// shut down QHOST hooks if necessary
 	//DeinitConProc();
@@ -91,13 +94,13 @@ void Sys_Error( const char *format, ... )
 
 void Sys_Quit( void )
 {
-	timeEndPeriod( 1 );
+//	timeEndPeriod( 1 );
 
 	CL_Shutdown();
 
-	CloseHandle( qwclsemaphore );
-	if( dedicated && dedicated->integer )
-		FreeConsole();
+//	CloseHandle( qwclsemaphore );
+//	if( dedicated && dedicated->integer )
+//		FreeConsole();
 
 	// shut down QHOST hooks if necessary
 	//DeinitConProc();
@@ -154,213 +157,213 @@ void *Sys_GetSymbol( const char *moduleName, const char *symbolName )
 */
 void Sys_Init( void )
 {
-	OSVERSIONINFO vinfo;
+//	OSVERSIONINFO vinfo;
 
-	timeBeginPeriod( 1 );
+//	timeBeginPeriod( 1 );
 	Sys_InitTime();
 
-	vinfo.dwOSVersionInfoSize = sizeof( vinfo );
+//	vinfo.dwOSVersionInfoSize = sizeof( vinfo );
+//
+//	if( !GetVersionEx( &vinfo ) )
+//		Sys_Error( "Couldn't get OS info" );
+//
+//	if( vinfo.dwMajorVersion < 4 )
+//		Sys_Error( "%s requires windows version 4 or greater", APPLICATION );
+//	if( vinfo.dwPlatformId == VER_PLATFORM_WIN32s )
+//		Sys_Error( "%s doesn't run on Win32s", APPLICATION );
+//	else if( vinfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )
+//		s_win95 = qtrue;
 
-	if( !GetVersionEx( &vinfo ) )
-		Sys_Error( "Couldn't get OS info" );
-
-	if( vinfo.dwMajorVersion < 4 )
-		Sys_Error( "%s requires windows version 4 or greater", APPLICATION );
-	if( vinfo.dwPlatformId == VER_PLATFORM_WIN32s )
-		Sys_Error( "%s doesn't run on Win32s", APPLICATION );
-	else if( vinfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )
-		s_win95 = qtrue;
-
-	if( dedicated->integer )
-	{
-		SetPriorityClass( GetCurrentProcess(), HIGH_PRIORITY_CLASS );
-
-		if( !AllocConsole() )
-			Sys_Error( "Couldn't create dedicated server console" );
-		hinput = GetStdHandle( STD_INPUT_HANDLE );
-		houtput = GetStdHandle( STD_OUTPUT_HANDLE );
-
-		// let QHOST hook in
-		//InitConProc( argc, argv );
-	}
+//	if( dedicated->integer )
+//	{
+//		SetPriorityClass( GetCurrentProcess(), HIGH_PRIORITY_CLASS );
+//
+//		if( !AllocConsole() )
+//			Sys_Error( "Couldn't create dedicated server console" );
+//		hinput = GetStdHandle( STD_INPUT_HANDLE );
+//		houtput = GetStdHandle( STD_OUTPUT_HANDLE );
+//
+//		// let QHOST hook in
+//		//InitConProc( argc, argv );
+//	}
 }
 
 #define MAX_CONSOLETEXT 256
 static char console_text[MAX_CONSOLETEXT];
 static int console_textlen;
 
-static char *OEM_to_utf8( const char *str )
-{
-	WCHAR wstr[MAX_CONSOLETEXT];
-	static char utf8str[MAX_CONSOLETEXT*4]; /* longest valid utf8 sequence is 4 bytes */
-
-	MultiByteToWideChar( CP_OEMCP, 0, str, -1, wstr, sizeof( wstr )/sizeof( WCHAR ) );
-	wstr[sizeof( wstr )/sizeof( wstr[0] ) - 1] = 0;
-	WideCharToMultiByte( CP_UTF8, 0, wstr, -1, utf8str, sizeof( utf8str ), NULL, NULL );
-	utf8str[sizeof( utf8str ) - 1] = 0;
-
-	return utf8str;
-}
-
-static char *utf8_to_OEM( const char *utf8str )
-{
-	WCHAR wstr[MAX_PRINTMSG];
-	static char oemstr[MAX_PRINTMSG];
-
-	MultiByteToWideChar( CP_UTF8, 0, utf8str, -1, wstr, sizeof( wstr )/sizeof( WCHAR ) );
-	wstr[sizeof( wstr )/sizeof( wstr[0] ) - 1] = 0;
-	WideCharToMultiByte( CP_OEMCP, 0, wstr, -1, oemstr, sizeof( oemstr ), "?", NULL );
-	oemstr[sizeof( oemstr ) - 1] = 0;
-
-	return oemstr;
-}
-
-/*
-* Sys_ConsoleInput
-*/
+//static char *OEM_to_utf8( const char *str )
+//{
+//	WCHAR wstr[MAX_CONSOLETEXT];
+//	static char utf8str[MAX_CONSOLETEXT*4]; /* longest valid utf8 sequence is 4 bytes */
+//
+//	MultiByteToWideChar( CP_OEMCP, 0, str, -1, wstr, sizeof( wstr )/sizeof( WCHAR ) );
+//	wstr[sizeof( wstr )/sizeof( wstr[0] ) - 1] = 0;
+//	WideCharToMultiByte( CP_UTF8, 0, wstr, -1, utf8str, sizeof( utf8str ), NULL, NULL );
+//	utf8str[sizeof( utf8str ) - 1] = 0;
+//
+//	return utf8str;
+//}
+//
+//static char *utf8_to_OEM( const char *utf8str )
+//{
+//	WCHAR wstr[MAX_PRINTMSG];
+//	static char oemstr[MAX_PRINTMSG];
+//
+//	MultiByteToWideChar( CP_UTF8, 0, utf8str, -1, wstr, sizeof( wstr )/sizeof( WCHAR ) );
+//	wstr[sizeof( wstr )/sizeof( wstr[0] ) - 1] = 0;
+//	WideCharToMultiByte( CP_OEMCP, 0, wstr, -1, oemstr, sizeof( oemstr ), "?", NULL );
+//	oemstr[sizeof( oemstr ) - 1] = 0;
+//
+//	return oemstr;
+//}
+//
+///*
+//* Sys_ConsoleInput
+//*/
 char *Sys_ConsoleInput( void )
 {
-	INPUT_RECORD rec;
-	int ch;
-	DWORD dummy;
-	DWORD numread, numevents;
-
-	if( !dedicated || !dedicated->integer )
-		return NULL;
-
-	for(;; )
-	{
-		if( !GetNumberOfConsoleInputEvents( hinput, &numevents ) )
-			Sys_Error( "Error getting # of console events" );
-
-		if( numevents <= 0 )
-			break;
-
-		if( !ReadConsoleInput( hinput, &rec, 1, &numread ) )
-			Sys_Error( "Error reading console input" );
-
-		if( numread != 1 )
-			Sys_Error( "Couldn't read console input" );
-
-		if( rec.EventType == KEY_EVENT )
-		{
-			if( !rec.Event.KeyEvent.bKeyDown )
-			{
-				ch = rec.Event.KeyEvent.uChar.AsciiChar;
-
-				switch( ch )
-				{
-				case '\r':
-					WriteFile( houtput, "\r\n", 2, &dummy, NULL );
-
-					if( console_textlen )
-					{
-						console_text[console_textlen] = 0;
-						console_textlen = 0;
-						return OEM_to_utf8( console_text );
-					}
-					break;
-
-				case '\b':
-					if( console_textlen )
-					{
-						console_textlen--;
-						WriteFile( houtput, "\b \b", 3, &dummy, NULL );
-					}
-					break;
-
-				default:
-					if( ( unsigned char )ch >= ' ' )
-					{
-						if( console_textlen < sizeof( console_text )-2 )
-						{
-							WriteFile( houtput, &ch, 1, &dummy, NULL );
-							console_text[console_textlen] = ch;
-							console_textlen++;
-						}
-					}
-					break;
-				}
-			}
-		}
-	}
-
+//	INPUT_RECORD rec;
+//	int ch;
+//	DWORD dummy;
+//	DWORD numread, numevents;
+//
+//	if( !dedicated || !dedicated->integer )
+//		return NULL;
+//
+//	for(;; )
+//	{
+//		if( !GetNumberOfConsoleInputEvents( hinput, &numevents ) )
+//			Sys_Error( "Error getting # of console events" );
+//
+//		if( numevents <= 0 )
+//			break;
+//
+//		if( !ReadConsoleInput( hinput, &rec, 1, &numread ) )
+//			Sys_Error( "Error reading console input" );
+//
+//		if( numread != 1 )
+//			Sys_Error( "Couldn't read console input" );
+//
+//		if( rec.EventType == KEY_EVENT )
+//		{
+//			if( !rec.Event.KeyEvent.bKeyDown )
+//			{
+//				ch = rec.Event.KeyEvent.uChar.AsciiChar;
+//
+//				switch( ch )
+//				{
+//				case '\r':
+//					WriteFile( houtput, "\r\n", 2, &dummy, NULL );
+//
+//					if( console_textlen )
+//					{
+//						console_text[console_textlen] = 0;
+//						console_textlen = 0;
+//						return OEM_to_utf8( console_text );
+//					}
+//					break;
+//
+//				case '\b':
+//					if( console_textlen )
+//					{
+//						console_textlen--;
+//						WriteFile( houtput, "\b \b", 3, &dummy, NULL );
+//					}
+//					break;
+//
+//				default:
+//					if( ( unsigned char )ch >= ' ' )
+//					{
+//						if( console_textlen < sizeof( console_text )-2 )
+//						{
+//							WriteFile( houtput, &ch, 1, &dummy, NULL );
+//							console_text[console_textlen] = ch;
+//							console_textlen++;
+//						}
+//					}
+//					break;
+//				}
+//			}
+//		}
+//	}
+//
 	return NULL;
 }
-
-static void PrintColoredText( const char *s )
-{
-	char c;
-	int colorindex;
-	DWORD dummy;
-
-	while( *s )
-	{
-		int gc = Q_GrabCharFromColorString( &s, &c, &colorindex );
-		if( gc == GRABCHAR_CHAR )
-		{
-			if( c == '\n' )
-				SetConsoleTextAttribute( houtput, 7 );
-			// I hope it's not too slow to output char by char
-			WriteFile( houtput, &c, 1, &dummy, NULL );
-		}
-		else if( gc == GRABCHAR_COLOR )
-		{
-			switch( colorindex )
-			{
-			case 0: colorindex = 3; break;	// dark cyan instead of black to keep it visible
-			case 1: colorindex = 12; break;
-			case 2: colorindex = 10; break;
-			case 3: colorindex = 14; break;
-			case 4: colorindex = 9; break;
-			case 5: colorindex = 11; break;	// note that cyan and magenta are 
-			case 6: colorindex = 13; break;	// not where one might expect
-			case 8: colorindex = 6; break;
-			case 9: colorindex = 8; break;
-			default:
-			case 7: colorindex = 7; break;	// 15 would be bright white
-			};
-			SetConsoleTextAttribute( houtput, colorindex );
-		}
-		else if( gc == GRABCHAR_END )
-			break;
-		else
-			assert( 0 );
-	}
-}
-
-/*
-* Sys_ConsoleOutput
-* 
-* Print text to the dedicated console
-*/
+//
+//static void PrintColoredText( const char *s )
+//{
+//	char c;
+//	int colorindex;
+//	DWORD dummy;
+//
+//	while( *s )
+//	{
+//		int gc = Q_GrabCharFromColorString( &s, &c, &colorindex );
+//		if( gc == GRABCHAR_CHAR )
+//		{
+//			if( c == '\n' )
+//				SetConsoleTextAttribute( houtput, 7 );
+//			// I hope it's not too slow to output char by char
+//			WriteFile( houtput, &c, 1, &dummy, NULL );
+//		}
+//		else if( gc == GRABCHAR_COLOR )
+//		{
+//			switch( colorindex )
+//			{
+//			case 0: colorindex = 3; break;	// dark cyan instead of black to keep it visible
+//			case 1: colorindex = 12; break;
+//			case 2: colorindex = 10; break;
+//			case 3: colorindex = 14; break;
+//			case 4: colorindex = 9; break;
+//			case 5: colorindex = 11; break;	// note that cyan and magenta are 
+//			case 6: colorindex = 13; break;	// not where one might expect
+//			case 8: colorindex = 6; break;
+//			case 9: colorindex = 8; break;
+//			default:
+//			case 7: colorindex = 7; break;	// 15 would be bright white
+//			};
+//			SetConsoleTextAttribute( houtput, colorindex );
+//		}
+//		else if( gc == GRABCHAR_END )
+//			break;
+//		else
+//			assert( 0 );
+//	}
+//}
+//
+///*
+//* Sys_ConsoleOutput
+//* 
+//* Print text to the dedicated console
+//*/
 void Sys_ConsoleOutput( char *string )
 {
-	DWORD dummy;
-	char text[MAX_CONSOLETEXT+2];	/* need 2 chars for the \r's */
-
-	if( !dedicated || !dedicated->integer )
-		return;
-
-	if( console_textlen )
-	{
-		text[0] = '\r';
-		memset( &text[1], ' ', console_textlen );
-		text[console_textlen+1] = '\r';
-		text[console_textlen+2] = 0;
-		WriteFile( houtput, text, console_textlen+2, &dummy, NULL );
-	}
-
-	string = utf8_to_OEM( string );
-
-#if 0
-	WriteFile( houtput, string, (unsigned)strlen( string ), &dummy, NULL );
-#else
-	PrintColoredText( string );
-#endif
-
-	if( console_textlen )
-		WriteFile( houtput, console_text, console_textlen, &dummy, NULL );
+//	DWORD dummy;
+//	char text[MAX_CONSOLETEXT+2];	/* need 2 chars for the \r's */
+//
+//	if( !dedicated || !dedicated->integer )
+//		return;
+//
+//	if( console_textlen )
+//	{
+//		text[0] = '\r';
+//		memset( &text[1], ' ', console_textlen );
+//		text[console_textlen+1] = '\r';
+//		text[console_textlen+2] = 0;
+//		WriteFile( houtput, text, console_textlen+2, &dummy, NULL );
+//	}
+//
+//	string = utf8_to_OEM( string );
+//
+//#if 0
+//	WriteFile( houtput, string, (unsigned)strlen( string ), &dummy, NULL );
+//#else
+//	PrintColoredText( string );
+//#endif
+//
+//	if( console_textlen )
+//		WriteFile( houtput, console_text, console_textlen, &dummy, NULL );
 }
 
 
@@ -374,16 +377,16 @@ void Sys_ConsoleOutput( char *string )
 #else
 int IN_MapKey( int key );
 qboolean Key_IsNonPrintable( int key );
-static BOOL myTranslateMessage (MSG *msg)
-{
-	if (msg->message == WM_KEYDOWN) {
-		if (Key_IsNonPrintable(IN_MapKey(msg->lParam)))
-			return TRUE;
-		else
-			return TranslateMessage(msg);
-	}
-	return TranslateMessage(msg);
-}
+//static BOOL myTranslateMessage (MSG *msg)
+//{
+//	if (msg->message == WM_KEYDOWN) {
+//		if (Key_IsNonPrintable(IN_MapKey(msg->lParam)))
+//			return TRUE;
+//		else
+//			return TranslateMessage(msg);
+//	}
+//	return TranslateMessage(msg);
+//}
 #endif
 
 /*
@@ -393,19 +396,19 @@ static BOOL myTranslateMessage (MSG *msg)
 */
 void Sys_SendKeyEvents( void )
 {
-	MSG msg;
-
-	while( PeekMessageW( &msg, NULL, 0, 0, PM_NOREMOVE ) )
-	{
-		if( !GetMessageW( &msg, NULL, 0, 0 ) )
-			Sys_Quit();
-		sys_msg_time = msg.time;
-		myTranslateMessage( &msg );
-		DispatchMessageW( &msg );
-	}
-
-	// grab frame time
-	sys_frame_time = timeGetTime(); // FIXME: should this be at start?
+//	MSG msg;
+//
+//	while( PeekMessageW( &msg, NULL, 0, 0, PM_NOREMOVE ) )
+//	{
+//		if( !GetMessageW( &msg, NULL, 0, 0 ) )
+//			Sys_Quit();
+//		sys_msg_time = msg.time;
+//		myTranslateMessage( &msg );
+//		DispatchMessageW( &msg );
+//	}
+//
+//	// grab frame time
+//	sys_frame_time = timeGetTime(); // FIXME: should this be at start?
 }
 
 /*
@@ -446,8 +449,8 @@ WINDOWS CRAP
 void Sys_AppActivate( void )
 {
 #ifndef DEDICATED_ONLY
-	ShowWindow( cl_hwnd, SW_RESTORE );
-	SetForegroundWindow( cl_hwnd );
+//	ShowWindow( cl_hwnd, SW_RESTORE );
+//	SetForegroundWindow( cl_hwnd );
 #endif
 }
 
@@ -456,7 +459,7 @@ void Sys_AppActivate( void )
 /*
 * WinMain
 */
-HINSTANCE global_hInstance;
+//HINSTANCE global_hInstance;
 
 static int TranslateSDLKey(int charkey)
 {
@@ -620,11 +623,17 @@ void IN_MouseMove( usercmd_t *cmd )
 	mx = my= 0;
 }
 
-int SDL_main( int argc, char **argv )
+#include <unistd.h>
+
+
+int main( int argc, char **argv )
 {
 	unsigned int oldtime, newtime, time;
 
 	SDL_Init(SDL_INIT_VIDEO);
+    
+    char buf[10240];
+    getcwd(buf, 10240);
 
 	Qcommon_Init( argc, argv );
 
@@ -636,7 +645,7 @@ int SDL_main( int argc, char **argv )
 		// if at a full screen console, don't update unless needed
 		if( Minimized || ( dedicated && dedicated->integer ) )
 		{
-			Sleep( 1 );
+			SDL_Delay( 1 );
 		}
 
 		ProcessEvents();
@@ -664,5 +673,5 @@ int SDL_main( int argc, char **argv )
 	SDL_Quit();
 
 	// never gets here
-	return TRUE;
+	return 0;
 }
