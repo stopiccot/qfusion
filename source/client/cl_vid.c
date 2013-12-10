@@ -455,7 +455,7 @@ static qboolean VID_LoadRefresh( const char *name )
 	funcs[0].name = "GetRefAPI";
 	funcs[0].funcPointer = (void **) &GetRefAPI_f;
 	funcs[1].name = NULL;
-	vid_ref_libhandle = Com_LoadLibrary( va( LIB_DIRECTORY "/%s_" ARCH LIB_SUFFIX, name ), funcs );
+	vid_ref_libhandle = Com_LoadLibrary( va( LIB_DIRECTORY "/" LIB_PREFIX "%s_" ARCH LIB_SUFFIX, name ), funcs );
 
 	if( vid_ref_libhandle ) {
 		// load succeeded

@@ -94,6 +94,7 @@ extern "C" {
 #endif
 
 #define LIB_DIRECTORY "libs"
+#define LIB_PREFIX ""
 #define LIB_SUFFIX ".dll"
 
 #define VID_INITFIRST
@@ -172,6 +173,7 @@ typedef UINT_PTR socket_handle_t;
 #endif
 
 #define LIB_DIRECTORY "libs"
+#define LIB_PREFIX "lib"
 #define LIB_SUFFIX ".so"
 
 #define GL_DRIVERNAME  "libGL.so.1"
@@ -246,6 +248,7 @@ typedef int socket_handle_t;
 #endif
 
 #define LIB_DIRECTORY "libs"
+#define LIB_PREFIX "lib"
 #define LIB_SUFFIX ".dylib"
 
 #define GL_DRIVERNAME  "/System/Library/Frameworks/OpenGL.framework/Libraries/libGL.dylib"

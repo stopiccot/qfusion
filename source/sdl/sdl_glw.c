@@ -47,7 +47,7 @@ glwstate_t glw_state;
 
 static void VID_SetWindowSize( qboolean fullscreen )
 {
-	if (fullscreen)
+	if (false && fullscreen)
 	{
 		SDL_SetWindowFullscreen(glw_state.sdl_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 	}
@@ -257,7 +257,12 @@ static qboolean VID_SetFullscreenMode( int displayFrequency, qboolean fullscreen
 //	}
 //
 //	return qfalse;
-    return qtrue;
+    if (fullscreen)
+    {
+        return qtrue;
+    } else {
+        return qfalse;
+    }
 }
 
 /*
