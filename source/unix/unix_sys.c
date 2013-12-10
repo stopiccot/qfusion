@@ -427,6 +427,8 @@ void Sys_FreeClipboardData( char *data )
 
 #endif
 
+
+#ifndef __APPLE__
 /*
 * Sys_OpenURLInBrowser
 */
@@ -441,6 +443,7 @@ void Sys_OpenURLInBrowser( const char *url )
 		// XIconifyWindow( x11display.dpy, x11display.win, x11display.scr );
     }
 }
+#endif
 
 /*
 * Sys_GetPreferredLanguage

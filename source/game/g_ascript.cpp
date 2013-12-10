@@ -3171,7 +3171,7 @@ static const asglobfuncs_t asGlobFuncs[] =
 	{ "bool ML_FilenameExists( String & )", asFUNCTION(asFunc_ML_FilenameExists), NULL },
 	{ "String @ML_GetMapByNum( int num )", asFUNCTION(asFunc_ML_GetMapByNum), NULL },
 
-	{ NULL }
+	{ NULL, NULL, NULL }
 };
 
 // ============================================================================
@@ -3195,7 +3195,7 @@ static const asglobfuncs_t asAIGlobFuncs[] =
 	{ "void RemoveGoal( Entity @ent )", asFUNCTION(AI_RemoveGoalEntity), NULL },
 	{ "void ReachedGoal( Entity @ent )", asFUNCTION(AI_ReachedEntity), NULL },
 
-	{ NULL }
+	{ NULL, NULL, NULL }
 };
 
 // ============================================================================

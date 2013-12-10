@@ -100,6 +100,11 @@ qboolean VID_GetScreenSize( int *width, int *height )
 	return qfalse;
 }
 
+qboolean VID_GetDisplaySize( int *width, int *height )
+{
+    return VID_GetScreenSize(width, height);
+}
+
 /*
  ** VID_NewWindow
  */

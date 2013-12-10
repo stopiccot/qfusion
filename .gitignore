@@ -10,5 +10,6 @@ libsrcs/libRocket/libRocket/lib/
 libsrcs/libRocket/libRocket/Build/obj/
 *.sdf
 *.opensdf
-*.vcxproj.user
-*.suo
+*.vcxproj.*
+*.vcxproj
+*.sln
