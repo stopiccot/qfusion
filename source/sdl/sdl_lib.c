@@ -36,7 +36,7 @@ qboolean Sys_Library_Close( void *lib )
 */
 void *Sys_Library_Open( const char *name )
 {
-	return SDL_LoadObject( name );
+    return SDL_LoadObject( name );
 }
 
 /*

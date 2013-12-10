@@ -43,4 +43,5 @@ project "ui"
         links { "RocketCore", "RocketControls" }
 
     configuration "macosx"
-        links { "Rocket.framework" }
+        --links { "Rocket.framework" }
+        links { "RocketCoreOSX.framework", "RocketControlsOSX.framework" }
