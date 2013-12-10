@@ -20,4 +20,4 @@ project "snd_qf"
 
     configuration "macosx"
         files { "../unix/unix_snd.c" }
-        links { "Ogg.framework", "Vorbis.framework", "SDL.framework" }
+        links { "Ogg.framework", "Vorbis.framework", "SDL2.framework" }

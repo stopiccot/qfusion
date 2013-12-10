@@ -30,11 +30,14 @@
 **
 */
 #include <assert.h>
-#include "../win32/winquake.h"
 #include "../ref_gl/r_local.h"
 #include "../sdl/sdl_glw.h"
 #include "../win32/resource.h"
-#include "SDL.h"
+#ifndef _WIN32
+    #include "SDL2/SDL.h"
+#else
+    #include "SDL.h"
+#endif
 
 static int GLimp_InitGL( void );
 
@@ -159,106 +162,107 @@ static qboolean VID_CreateWindow( void )
 */
 static qboolean VID_SetFullscreenMode( int displayFrequency, qboolean fullscreen )
 {
-	// do a CDS if needed
-	if( fullscreen )
-	{
-		int a;
-		DEVMODE dm;
-		HDC hdc;
-		int bitspixel;
-
-		ri.Com_DPrintf( "...attempting fullscreen\n" );
-
-		memset( &dm, 0, sizeof( dm ) );
-
-		dm.dmSize = sizeof( dm );
-
-		dm.dmPelsWidth  = glConfig.width;
-		dm.dmPelsHeight = glConfig.height;
-		dm.dmFields     = DM_PELSWIDTH | DM_PELSHEIGHT;
-
-		hdc = GetDC( NULL );
-		bitspixel = GetDeviceCaps( hdc, BITSPIXEL );
-
-		ri.Com_DPrintf( "...using desktop display depth of %d\n", bitspixel );
-
-		ReleaseDC( 0, hdc );
-
-		if( displayFrequency > 0 )
-		{
-			dm.dmFields |= DM_DISPLAYFREQUENCY;
-			dm.dmDisplayFrequency = displayFrequency;
-			ri.Com_DPrintf( "...using display frequency %i\n", dm.dmDisplayFrequency );
-		}
-
-		ri.Com_DPrintf( "...calling CDS: " );
-		a = ChangeDisplaySettings( &dm, CDS_FULLSCREEN );
-		if( a == DISP_CHANGE_SUCCESSFUL )
-		{
-			ri.Com_DPrintf( "ok\n" );
-
-			if( glw_state.sdl_window ) {
-				VID_SetWindowSize( qtrue );
-			}
-			return qtrue;
-		}
-		else
-		{
-			ri.Com_DPrintf( "failed: %i\n", a );
-
-			ri.Com_DPrintf( "...calling CDS assuming dual monitors:" );
-
-			dm.dmPelsWidth = glConfig.width * 2;
-			dm.dmPelsHeight = glConfig.height;
-			dm.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT;
-
-			if( displayFrequency > 0 )
-			{
-				dm.dmFields |= DM_DISPLAYFREQUENCY;
-				dm.dmDisplayFrequency = displayFrequency;
-				ri.Com_DPrintf( "...using display frequency %i\n", dm.dmDisplayFrequency );
-			}
-
-			/*
-			** our first CDS failed, so maybe we're running on some weird dual monitor
-			** system
-			*/
-			if( ChangeDisplaySettings( &dm, CDS_FULLSCREEN ) != DISP_CHANGE_SUCCESSFUL )
-			{
-				ri.Com_DPrintf( " failed\n" );
-
-				ri.Com_DPrintf( "...setting windowed mode\n" );
-
-				ChangeDisplaySettings( 0, 0 );
-
-				if( glw_state.sdl_window ) {
-					VID_SetWindowSize( qfalse );
-				}
-				return qfalse;
-			}
-			else
-			{
-				ri.Com_DPrintf( " ok\n" );
-
-				if( glw_state.sdl_window ) {
-					VID_SetWindowSize( qtrue );
-				}
-				return qtrue;
-			}
-		}
-	}
-	else
-	{
-		ri.Com_DPrintf( "...setting windowed mode\n" );
-
-		ChangeDisplaySettings( 0, 0 );
-
-		if( glw_state.sdl_window ) {
-			VID_SetWindowSize( qfalse );
-		}
-	}
-
-	return qfalse;
+//	// do a CDS if needed
+//	if( fullscreen )
+//	{
+//		int a;
+//		DEVMODE dm;
+//		HDC hdc;
+//		int bitspixel;
+//
+//		ri.Com_DPrintf( "...attempting fullscreen\n" );
+//
+//		memset( &dm, 0, sizeof( dm ) );
+//
+//		dm.dmSize = sizeof( dm );
+//
+//		dm.dmPelsWidth  = glConfig.width;
+//		dm.dmPelsHeight = glConfig.height;
+//		dm.dmFields     = DM_PELSWIDTH | DM_PELSHEIGHT;
+//
+//		hdc = GetDC( NULL );
+//		bitspixel = GetDeviceCaps( hdc, BITSPIXEL );
+//
+//		ri.Com_DPrintf( "...using desktop display depth of %d\n", bitspixel );
+//
+//		ReleaseDC( 0, hdc );
+//
+//		if( displayFrequency > 0 )
+//		{
+//			dm.dmFields |= DM_DISPLAYFREQUENCY;
+//			dm.dmDisplayFrequency = displayFrequency;
+//			ri.Com_DPrintf( "...using display frequency %i\n", dm.dmDisplayFrequency );
+//		}
+//
+//		ri.Com_DPrintf( "...calling CDS: " );
+//		a = ChangeDisplaySettings( &dm, CDS_FULLSCREEN );
+//		if( a == DISP_CHANGE_SUCCESSFUL )
+//		{
+//			ri.Com_DPrintf( "ok\n" );
+//
+//			if( glw_state.sdl_window ) {
+//				VID_SetWindowSize( qtrue );
+//			}
+//			return qtrue;
+//		}
+//		else
+//		{
+//			ri.Com_DPrintf( "failed: %i\n", a );
+//
+//			ri.Com_DPrintf( "...calling CDS assuming dual monitors:" );
+//
+//			dm.dmPelsWidth = glConfig.width * 2;
+//			dm.dmPelsHeight = glConfig.height;
+//			dm.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT;
+//
+//			if( displayFrequency > 0 )
+//			{
+//				dm.dmFields |= DM_DISPLAYFREQUENCY;
+//				dm.dmDisplayFrequency = displayFrequency;
+//				ri.Com_DPrintf( "...using display frequency %i\n", dm.dmDisplayFrequency );
+//			}
+//
+//			/*
+//			** our first CDS failed, so maybe we're running on some weird dual monitor
+//			** system
+//			*/
+//			if( ChangeDisplaySettings( &dm, CDS_FULLSCREEN ) != DISP_CHANGE_SUCCESSFUL )
+//			{
+//				ri.Com_DPrintf( " failed\n" );
+//
+//				ri.Com_DPrintf( "...setting windowed mode\n" );
+//
+//				ChangeDisplaySettings( 0, 0 );
+//
+//				if( glw_state.sdl_window ) {
+//					VID_SetWindowSize( qfalse );
+//				}
+//				return qfalse;
+//			}
+//			else
+//			{
+//				ri.Com_DPrintf( " ok\n" );
+//
+//				if( glw_state.sdl_window ) {
+//					VID_SetWindowSize( qtrue );
+//				}
+//				return qtrue;
+//			}
+//		}
+//	}
+//	else
+//	{
+//		ri.Com_DPrintf( "...setting windowed mode\n" );
+//
+//		ChangeDisplaySettings( 0, 0 );
+//
+//		if( glw_state.sdl_window ) {
+//			VID_SetWindowSize( qfalse );
+//		}
+//	}
+//
+//	return qfalse;
+    return qtrue;
 }
 
 /*
@@ -383,7 +387,9 @@ void GLimp_Shutdown( void )
 
 	if( glConfig.fullScreen )
 	{
+#ifdef _WIN32
 		ChangeDisplaySettings( 0, 0 );
+#endif
 		glConfig.fullScreen = qfalse;
 	}
 

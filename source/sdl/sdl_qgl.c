@@ -47,8 +47,11 @@ and Zephaniah E. Hull. Adapted by Victor Luchits for qfusion project.
 
 #define GL_GLEXT_LEGACY
 
-#include <windows.h>
-#include <GL/gl.h>
+#ifdef _WIN32
+    #include <windows.h>
+    #include <GL/gl.h>
+#endif
+
 #include "../qcommon/qcommon.h"
 #include "../sdl/sdl_glw.h"
 
@@ -56,8 +59,8 @@ and Zephaniah E. Hull. Adapted by Victor Luchits for qfusion project.
 
 #define QGL_FUNC( type, name, params ) type( APIENTRY * q ## name ) params;
 #define QGL_EXT( type, name, params ) type( APIENTRY * q ## name ) params;
-#define QGL_WGL( type, name, params ) type( APIENTRY * q ## name ) params;
-#define QGL_WGL_EXT( type, name, params ) type( APIENTRY * q ## name ) params;
+#define QGL_WGL( type, name, params )
+#define QGL_WGL_EXT( type, name, params )
 #define QGL_GLX( type, name, params )
 #define QGL_GLX_EXT( type, name, params )
 
@@ -90,8 +93,8 @@ void QGL_Shutdown( void )
 
 #define QGL_FUNC( type, name, params ) ( q ## name ) = NULL;
 #define QGL_EXT( type, name, params ) ( q ## name ) = NULL;
-#define QGL_WGL( type, name, params ) ( q ## name ) = NULL;
-#define QGL_WGL_EXT( type, name, params ) ( q ## name ) = NULL;
+#define QGL_WGL( type, name, params )
+#define QGL_WGL_EXT( type, name, params )
 #define QGL_GLX( type, name, params )
 #define QGL_GLX_EXT( type, name, params )
 
@@ -124,9 +127,10 @@ qboolean QGL_Init( const char *dllname )
 		char *buf;
 
 		buf = NULL;
-		FormatMessage( FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ), (LPTSTR) &buf, 0, NULL );
+		//FormatMessage( FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ), (LPTSTR) &buf, 0, NULL );
 		Com_Printf( "%s\n", buf );
-		MessageBox( NULL, buf, "Error", 0 /* MB_OK */ );
+		//MessageBox( NULL, buf, "Error", 0 /* MB_OK */ );
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "qfusion", "SDL_GL_LoadLibrary() failed", NULL);
 		return qfalse;
 	}
 
@@ -165,14 +169,14 @@ void *qglGetProcAddress( const GLubyte *procName )
 */
 static const char *_qglGetGLWExtensionsStringInit( void )
 {
-	qwglGetExtensionsStringEXT = ( void * )qglGetProcAddress( (const GLubyte *)"wglGetExtensionsStringEXT" );
-	qglGetGLWExtensionsString = _qglGetGLWExtensionsString;
-	return qglGetGLWExtensionsString();
+//	qwglGetExtensionsStringEXT = ( void * )qglGetProcAddress( (const GLubyte *)"wglGetExtensionsStringEXT" );
+//	qglGetGLWExtensionsString = _qglGetGLWExtensionsString;
+	return NULL;//qglGetGLWExtensionsString();
 }
 
 static const char *_qglGetGLWExtensionsString( void )
 {
-	if( qwglGetExtensionsStringEXT )
-		return qwglGetExtensionsStringEXT();
+//	if( qwglGetExtensionsStringEXT )
+//		return qwglGetExtensionsStringEXT();
 	return NULL;
 }

@@ -30,4 +30,4 @@ project "ref_gl"
         links { "libpngstat", "libjpegstat", "zlibstat", "SDL2" }
 
     configuration "macosx"
-        links { "libpng.framework", "jpeg.framework", "SDL.framework" }
+        links { "libpng.framework", "jpeg.framework", "SDL2.framework" }

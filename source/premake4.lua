@@ -60,9 +60,7 @@ solution "qfusion"
 
     configuration "macosx"
         targetsuffix "_mac"
-        if os.is("macosx") then
-            frameworkdirs { "mac/Frameworks" }
-        end
+        libdirs { "mac/Frameworks" }
 
     include "angelwrap"
     include "cgame"
@@ -243,7 +241,7 @@ solution "qfusion"
             links { "cin", "libcurlstat", "zlibstat", "winmm", "ws2_32", "dxguid", "SDL2", "SDL2main" }
 
         configuration "macosx"
-            links { "cin", "libcurl.framework", "SDL.framework", "IOKit.framework", "libpng.framework", "jpeg.framework", "Cocoa.framework", "z"}
+            links { "cin", "libcurl.framework", "SDL2.framework", "IOKit.framework", "libpng.framework", "jpeg.framework", "Cocoa.framework", "z"}
 
     project "qfusion_server"
 

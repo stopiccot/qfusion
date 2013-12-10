@@ -17,14 +17,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+#ifndef __GLW_SDL_H__
+#define __GLW_SDL_H__
+
 #ifndef _WIN32
-#error You should not be including this file on this platform
+    #include "SDL2/SDL.h"
+#else
+    #include "SDL.h"
 #endif
-
-#ifndef __GLW_WIN_H__
-#define __GLW_WIN_H__
-
-#include "SDL.h"
 
 #define WINDOW_CLASSNAME_SIZE	120
 
