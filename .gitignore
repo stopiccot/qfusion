@@ -8,9 +8,15 @@ libsrcs/angelscript/sdk/angelscript/lib/
 libsrcs/angelscript/sdk/angelscript/projects/gnuc/obj/
 libsrcs/libRocket/libRocket/lib/
 libsrcs/libRocket/libRocket/Build/obj/
+
+# Visual Studio project files
 *.sdf
 *.opensdf
 *.vcxproj.*
 *.vcxproj
 *.sln
 *.suo
+
+# Xcode project files
+**.xcodeproj
+*.xcworkspace
