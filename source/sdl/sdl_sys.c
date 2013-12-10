@@ -82,7 +82,7 @@ void Sys_Error( const char *format, ... )
 		CloseHandle( qwclsemaphore );
 
 	// shut down QHOST hooks if necessary
-	DeinitConProc();
+	//DeinitConProc();
 
 	Qcommon_Shutdown();
 
@@ -100,7 +100,7 @@ void Sys_Quit( void )
 		FreeConsole();
 
 	// shut down QHOST hooks if necessary
-	DeinitConProc();
+	//DeinitConProc();
 
 	Qcommon_Shutdown();
 
@@ -181,7 +181,7 @@ void Sys_Init( void )
 		houtput = GetStdHandle( STD_OUTPUT_HANDLE );
 
 		// let QHOST hook in
-		InitConProc( argc, argv );
+		//InitConProc( argc, argv );
 	}
 }
 
@@ -466,6 +466,7 @@ static int TranslateSDLKey(int charkey)
 		//case SDLK_TAB:			charkey = K_TAB;		break;
 		case SDL_SCANCODE_RETURN : charkey = K_ENTER; break;
 		//case SDLK_RETURN:		charkey = K_ENTER;		break;
+		case SDL_SCANCODE_ESCAPE: charkey = K_ESCAPE; break;
 		//case SDLK_ESCAPE:		charkey = K_ESCAPE;		break;
 		//case SDLK_SPACE:		charkey = K_SPACE;		break;
 		//case SDLK_CAPSLOCK:		charkey = K_CAPSLOCK;	break;
@@ -475,7 +476,7 @@ static int TranslateSDLKey(int charkey)
 		//case SDLK_BACKSPACE:	charkey = K_BACKSPACE;	break;
 		//case SDLK_UP:			charkey = K_UPARROW;	break;
 		//case SDLK_DOWN:			charkey = K_DOWNARROW;	break;
-		//case SDLK_LEFT:			charkey = K_LEFTARROW;	break;
+		//case SDLK_LEFT:			charkey = K_FTARROW;	break;
 		//case SDLK_RIGHT:		charkey = K_RIGHTARROW;	break;
 		//case SDLK_LALT:
 		//case SDLK_RALT:			charkey = K_OPTION;		break;

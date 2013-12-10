@@ -225,15 +225,15 @@ solution "qfusion"
             "sdl/sdl_sys.c",
             "sdl/sdl_vid.c",
             "sdl/sdl_glw.h",
+            "sdl/sdl_input.c",
         }
 
         configuration "windows"
             files {
                 "sdl/sdl_sys_win32.c",
-                "win32/winquake.h",
-                "win32/conproc.c",
+                --"win32/winquake.h",
+                --"win32/conproc.c",
                 "win32/win_fs.c",
-                "win32/win_input.c",
                 "win32/win_net.c",
                 "win32/qfusion.rc",
             }
