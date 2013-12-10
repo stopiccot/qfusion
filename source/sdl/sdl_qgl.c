@@ -81,7 +81,7 @@ static const char *_qglGetGLWExtensionsStringInit( void );
 void QGL_Shutdown( void )
 {
 	if( glw_state.hinstOpenGL )
-		FreeLibrary( glw_state.hinstOpenGL );
+		SDL_UnloadObject( glw_state.hinstOpenGL );
 	glw_state.hinstOpenGL = NULL;
 
 	qglGetGLWExtensionsString = NULL;
@@ -117,7 +117,7 @@ void QGL_Shutdown( void )
 */
 qboolean QGL_Init( const char *dllname )
 {
-	if( ( glw_state.hinstOpenGL = LoadLibrary( dllname ) ) == 0 )
+	if( ( glw_state.hinstOpenGL = SDL_GL_LoadLibrary( NULL ) ) == -1 )
 	{
 		char *buf;
 
@@ -128,12 +128,11 @@ qboolean QGL_Init( const char *dllname )
 		return qfalse;
 	}
 
-#define QGL_FUNC( type, name, params ) ( q ## name ) = ( void * )GetProcAddress( glw_state.hinstOpenGL, # name ); \
+#define QGL_FUNC( type, name, params ) ( q ## name ) = ( void * )SDL_GL_GetProcAddress( # name ); \
 	if( !( q ## name ) ) { Com_Printf( "QGL_Init: Failed to get address for %s\n", # name ); return qfalse; }
 #define QGL_EXT( type, name, params ) ( q ## name ) = NULL;
-#define QGL_WGL( type, name, params ) ( q ## name ) = ( void * )GetProcAddress( glw_state.hinstOpenGL, # name ); \
-	if( !( q ## name ) ) { Com_Printf( "QGL_Init: Failed to get address for %s\n", # name ); return qfalse; }
-#define QGL_WGL_EXT( type, name, params ) ( q ## name ) = NULL;
+#define QGL_WGL( type, name, params )
+#define QGL_WGL_EXT( type, name, params )
 #define QGL_GLX( type, name, params )
 #define QGL_GLX_EXT( type, name, params )
 
@@ -156,7 +155,7 @@ qboolean QGL_Init( const char *dllname )
 */
 void *qglGetProcAddress( const GLubyte *procName )
 {
-	return (void *)qwglGetProcAddress( (LPCSTR)procName );
+	return (void *)SDL_GL_GetProcAddress( (char *)procName );
 }
 
 /*

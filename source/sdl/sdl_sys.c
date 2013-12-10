@@ -464,6 +464,7 @@ static int TranslateSDLKey(int charkey)
 	{
 		case SDL_SCANCODE_TAB : charkey = K_TAB; break;
 		//case SDLK_TAB:			charkey = K_TAB;		break;
+		case SDL_SCANCODE_RETURN : charkey = K_ENTER; break;
 		//case SDLK_RETURN:		charkey = K_ENTER;		break;
 		//case SDLK_ESCAPE:		charkey = K_ESCAPE;		break;
 		//case SDLK_SPACE:		charkey = K_SPACE;		break;
@@ -622,7 +623,7 @@ int SDL_main( int argc, char **argv )
 {
 	unsigned int oldtime, newtime, time;
 
-	SDL_Init(0);
+	SDL_Init(SDL_INIT_VIDEO);
 
 	Qcommon_Init( argc, argv );
 

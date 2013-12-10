@@ -197,7 +197,7 @@ static qboolean VID_SetFullscreenMode( int displayFrequency, qboolean fullscreen
 		{
 			ri.Com_DPrintf( "ok\n" );
 
-			if( glw_state.hWnd ) {
+			if( glw_state.sdl_window ) {
 				VID_SetWindowSize( qtrue );
 			}
 			return qtrue;
@@ -231,7 +231,7 @@ static qboolean VID_SetFullscreenMode( int displayFrequency, qboolean fullscreen
 
 				ChangeDisplaySettings( 0, 0 );
 
-				if( glw_state.hWnd ) {
+				if( glw_state.sdl_window ) {
 					VID_SetWindowSize( qfalse );
 				}
 				return qfalse;
@@ -240,7 +240,7 @@ static qboolean VID_SetFullscreenMode( int displayFrequency, qboolean fullscreen
 			{
 				ri.Com_DPrintf( " ok\n" );
 
-				if( glw_state.hWnd ) {
+				if( glw_state.sdl_window ) {
 					VID_SetWindowSize( qtrue );
 				}
 				return qtrue;
@@ -253,7 +253,7 @@ static qboolean VID_SetFullscreenMode( int displayFrequency, qboolean fullscreen
 
 		ChangeDisplaySettings( 0, 0 );
 
-		if( glw_state.hWnd ) {
+		if( glw_state.sdl_window ) {
 			VID_SetWindowSize( qfalse );
 		}
 	}
@@ -270,7 +270,7 @@ rserr_t GLimp_SetMode( int x, int y, int width, int height, int displayFrequency
 	const char *win_fs[] = { "W", "FS" };
 
 	// check whether we can toggle fullscreen without a vid_restart
-	if( glw_state.hWnd ) {
+	if( glw_state.sdl_window ) {
 		if( glConfig.width == width && glConfig.height == height && fullscreen != glConfig.fullScreen ) {
 			glConfig.fullScreen = VID_SetFullscreenMode( displayFrequency, fullscreen );
 
@@ -288,6 +288,7 @@ rserr_t GLimp_SetMode( int x, int y, int width, int height, int displayFrequency
 	ri.Com_Printf( "...setting mode:" );
 
 	// disable fullscreen if rendering to a parent window
+	/*
 	if( glw_state.parenthWnd ) {
 		RECT parentWindowRect;
 
@@ -298,11 +299,12 @@ rserr_t GLimp_SetMode( int x, int y, int width, int height, int displayFrequency
 		width = parentWindowRect.right - parentWindowRect.left;
 		height = parentWindowRect.bottom - parentWindowRect.top;
 	}
+	*/
 
 	ri.Com_Printf( " %d %d %s\n", width, height, win_fs[fullscreen] );
 
 	// destroy the existing window
-	if( glw_state.hWnd )
+	if( glw_state.sdl_window )
 	{
 		GLimp_Shutdown();
 	}
@@ -409,11 +411,11 @@ void GLimp_Shutdown( void )
 int GLimp_Init( const char *applicationName, void *hinstance, void *wndproc, void *parenthWnd )
 {
 	// save off hInstance and wndproc
-	glw_state.applicationName = malloc( strlen( applicationName ) + 1 );
+	glw_state.applicationName = (char*)malloc( strlen( applicationName ) + 1 );
 	memcpy( glw_state.applicationName, applicationName, strlen( applicationName ) + 1 );
-	glw_state.hInstance = ( HINSTANCE ) hinstance;
-	glw_state.wndproc = wndproc;
-	glw_state.parenthWnd = ( HWND )parenthWnd;
+	//glw_state.hInstance = ( HINSTANCE ) hinstance;
+	//glw_state.wndproc = wndproc;
+	//glw_state.parenthWnd = ( HWND )parenthWnd;
 
 	return qtrue;
 }
@@ -691,15 +693,18 @@ void GLimp_AppActivate( qboolean active, qboolean destroy )
 	if( active )
 	{
 		ri.Cvar_Set( "gl_drawbuffer", "GL_BACK" );
-		SetForegroundWindow( glw_state.hWnd );
-		ShowWindow( glw_state.hWnd, SW_RESTORE );
+		SDL_MaximizeWindow( glw_state.sdl_window );
+		SDL_ShowWindow( glw_state.sdl_window );
+		//SetForegroundWindow( glw_state.hWnd );
+		//ShowWindow( glw_state.hWnd, SW_RESTORE );
 	}
 	else
 	{
 		if( glConfig.fullScreen )
 		{
 			ri.Cvar_Set( "gl_drawbuffer", "GL_NONE" );
-			ShowWindow( glw_state.hWnd, SW_MINIMIZE );
+			SDL_HideWindow( glw_state.sdl_window );
+			//ShowWindow( glw_state.hWnd, SW_MINIMIZE );
 		}
 		else
 		{

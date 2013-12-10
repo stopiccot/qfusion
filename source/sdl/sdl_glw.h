@@ -30,22 +30,22 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 typedef struct
 {
-	HINSTANCE hInstance;
-	void *wndproc;
+	//HINSTANCE hInstance;
+	//void *wndproc;
 
 	char *applicationName;
-	HDC hDC;                    // handle to device context
-	HWND hWnd;                  // handle to window
-	HWND parenthWnd;			// handle to parent window
-	HGLRC hGLRC;                // handle to GL rendering context
+	//HDC hDC;                    // handle to device context
+	//HWND hWnd;                  // handle to window
+	//HWND parenthWnd;			// handle to parent window
+	//HGLRC hGLRC;                // handle to GL rendering context
 
 	SDL_Window* sdl_window;
 	SDL_GLContext sdl_glcontext;
 
-	char windowClassName[WINDOW_CLASSNAME_SIZE];
-	WCHAR windowClassNameW[WINDOW_CLASSNAME_SIZE];
+	//char windowClassName[WINDOW_CLASSNAME_SIZE];
+	//WCHAR windowClassNameW[WINDOW_CLASSNAME_SIZE];
 
-	HINSTANCE hinstOpenGL;      // HINSTANCE for the OpenGL library
+	int hinstOpenGL;      // HINSTANCE for the OpenGL library
 
 	int win_x, win_y;
 	qboolean allowdisplaydepthchange;
