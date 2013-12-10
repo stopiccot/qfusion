@@ -81,8 +81,10 @@ static const char *_qglGetGLWExtensionsStringInit( void );
 void QGL_Shutdown( void )
 {
 	if( glw_state.hinstOpenGL )
-		SDL_UnloadObject( glw_state.hinstOpenGL );
-	glw_state.hinstOpenGL = NULL;
+	{
+		//SDL_UnloadObject( glw_state.hinstOpenGL );
+	}
+	glw_state.hinstOpenGL = 0;
 
 	qglGetGLWExtensionsString = NULL;
 

@@ -864,6 +864,7 @@ void IN_MouseEvent( int mstate )
 /*
 * IN_MouseMove
 */
+/*
 void IN_MouseMove( usercmd_t *cmd )
 {
 	DIDEVICEOBJECTDATA od;
@@ -976,7 +977,7 @@ void IN_MouseMove( usercmd_t *cmd )
 
 	CL_MouseMove( cmd, mx, my );
 }
-
+*/
 
 /*
 =========================================================================

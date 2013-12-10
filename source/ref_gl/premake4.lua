@@ -21,22 +21,13 @@ project "ref_gl"
         "../qcommon/bsp.c",
         "../qcommon/patch.c",
         "../gameshared/q_trie.c",
+        "../sdl/sdl_glw.h",
+        "../sdl/sdl_glw.c",
+        "../sdl/sdl_qgl.c",
     }
 
     configuration "windows"
-        files {
-            "../win32/win_glw.h",
-            "../win32/win_glw.c",
-            "../win32/win_qgl.c",
-        }
-
-        links { "libpngstat", "libjpegstat", "zlibstat" }
+        links { "libpngstat", "libjpegstat", "zlibstat", "SDL2" }
 
     configuration "macosx"
-        files {
-            "../mac/mac_glw.h",
-            "../mac/mac_glw.m",
-            "../mac/mac_qgl.c",
-        }
-
         links { "libpng.framework", "jpeg.framework", "SDL.framework" }

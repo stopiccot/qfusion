@@ -13,3 +13,4 @@ libsrcs/libRocket/libRocket/Build/obj/
 *.vcxproj.*
 *.vcxproj
 *.sln
+*.suo
