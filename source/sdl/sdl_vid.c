@@ -369,7 +369,7 @@ LONG WINAPI MainWndProc(
 		return 0;
 
 	case WM_INPUT:
-		IN_RawInput_MouseRead( (HANDLE)lParam );
+		//IN_RawInput_MouseRead( (HANDLE)lParam );
 		break;
 
 	case WM_CREATE:
