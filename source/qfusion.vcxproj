@@ -201,7 +201,7 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy .\win32\x86\lib\release\SDL2.dll .\Debug\x86\SDL2.dll</Command>
+      <Command>copy .\win32\x86\lib\release\SDL2.dll .\Release\x86\SDL2.dll</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
