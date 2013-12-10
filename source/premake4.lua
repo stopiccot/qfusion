@@ -30,6 +30,7 @@ solution "qfusion"
 
     configuration "vs*"
         flags { "StaticRuntime" }
+        targetsuffix "_$(PlatformShortName)"
         -- buildoptions { "/NODEFAULTLIB:\"libcmt\"" }
         defines     { "WIN32", "_WINDOWS", "_CRT_SECURE_NO_WARNINGS", "_SECURE_SCL=0", "CURL_STATICLIB" }
 
@@ -48,19 +49,13 @@ solution "qfusion"
             "win32/include",
         }
 
-    configuration {"vs*", "x64"}
-        targetsuffix "_x64"
-
-    configuration {"vs*", "x32"}
-        targetsuffix "_x86"
-
     configuration {"vs*", "Debug"}
         flags   { "Symbols" }
-        libdirs { "win32/x86/lib/debug" }
+        libdirs { "win32/$(PlatformShortName)/lib/debug" }
 
     configuration {"vs*", "Release"}
         flags   { "Optimize" }
-        libdirs { "win32/x86/lib/release" }
+        libdirs { "win32/$(PlatformShortName)/lib/release" }
 
     configuration "macosx"
         targetsuffix "_mac"
