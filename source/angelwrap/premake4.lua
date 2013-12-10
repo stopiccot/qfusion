@@ -4,6 +4,8 @@ project "angelwrap"
     language  "C++"
 
     qf_targetdir "libs"
+
+    defines { "CVAR_FORCESET" }
     
     files    { 
         "*.h",
