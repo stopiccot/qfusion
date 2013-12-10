@@ -39,7 +39,8 @@ project "ui"
         "../gameshared/q_shared.c",
     }
 
-    links {
-        "RocketCore",
-        "RocketControls",
-    }
+    configuration "windows"
+        links { "RocketCore", "RocketControls" }
+
+    configuration "macosx"
+        links { "Rocket.framework" }
