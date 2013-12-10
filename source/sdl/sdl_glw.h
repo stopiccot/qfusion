@@ -20,30 +20,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef __GLW_SDL_H__
 #define __GLW_SDL_H__
 
-#ifndef _WIN32
-    #include "SDL2/SDL.h"
-#else
-    #include "SDL.h"
-#endif
-
-#define WINDOW_CLASSNAME_SIZE	120
+#include "SDL2/SDL.h"
 
 typedef struct
 {
-	//HINSTANCE hInstance;
-	//void *wndproc;
-
 	char *applicationName;
-	//HDC hDC;                    // handle to device context
-	//HWND hWnd;                  // handle to window
-	//HWND parenthWnd;			// handle to parent window
-	//HGLRC hGLRC;                // handle to GL rendering context
 
 	SDL_Window* sdl_window;
 	SDL_GLContext sdl_glcontext;
-
-	//char windowClassName[WINDOW_CLASSNAME_SIZE];
-	//WCHAR windowClassNameW[WINDOW_CLASSNAME_SIZE];
 
 	int hinstOpenGL;      // HINSTANCE for the OpenGL library
 

@@ -337,7 +337,7 @@ static const gl_extension_t gl_extensions_decl[] =
 	,GL_EXTENSION( EXT, framebuffer_object, true, true, &gl_ext_framebuffer_object_EXT_funcs )
 	,GL_EXTENSION_EXT( EXT, framebuffer_blit, 1, true, false, &gl_ext_framebuffer_blit_EXT_funcs, framebuffer_object )
 	,GL_EXTENSION_EXT( ARB, texture_compression, 0, false, false, NULL, _extMarker )
-#ifndef (__APPLE__)
+#ifndef __APPLE__
 	,GL_EXTENSION( EXT, texture_edge_clamp, true, true, NULL )
 #endif
 	,GL_EXTENSION( EXT, texture_filter_anisotropic, true, false, NULL )

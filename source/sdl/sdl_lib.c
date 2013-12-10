@@ -19,14 +19,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 #include "../qcommon/qcommon.h"
-
 #include "../qcommon/sys_library.h"
-
-#ifndef _WIN32
-    #include "SDL2/SDL.h"
-#else
-    #include "SDL.h"
-#endif
+#include "SDL2/SDL.h"
 
 /*
 * Sys_Library_Close

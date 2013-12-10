@@ -23,8 +23,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <assert.h>
 #include <float.h>
 #include "../client/client.h"
-//#include "../win32/winquake.h"
-
+#include "SDL2/SDL.h"
 //static UINT MSH_MOUSEWHEEL;
 
 // Console variables that we need to access from this module
@@ -546,15 +545,11 @@ void VID_Front_f( void )
 */
 qboolean VID_GetDisplaySize( int *width, int *height )
 {
-	//DEVMODE dm;
-	//	
-	//memset( &dm, 0, sizeof( dm ) );
-	//dm.dmSize = sizeof( dm );
-
-	//EnumDisplaySettings( NULL, ENUM_CURRENT_SETTINGS, &dm );
-
-	//*width = dm.dmPelsWidth;
-	//*height = dm.dmPelsHeight;
+	SDL_DisplayMode mode;
+	SDL_GetDesktopDisplayMode(0, &mode);
+	
+	*width = mode.w;
+	*height = mode.h;
 
 	return qtrue;
 }

@@ -53,7 +53,7 @@ void Sys_NET_AsyncResolveHostname( const char *hostname )
 #define WM_ASYNC_LOOKUP_DONE WM_USER+1
 	static char hostentbuf[MAXGETHOSTSTRUCT];
 
-	WSAAsyncGetHostByName( cl_hwnd, WM_ASYNC_LOOKUP_DONE, hostname, hostentbuf, sizeof( hostentbuf ) );
+	WSAAsyncGetHostByName( 0, WM_ASYNC_LOOKUP_DONE, hostname, hostentbuf, sizeof( hostentbuf ) );
 #undef WM_ASYNC_LOOKUP_DONE
 #endif
 }

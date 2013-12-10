@@ -30,14 +30,9 @@
 **
 */
 #include <assert.h>
+#include "SDL2/SDL.h"
 #include "../ref_gl/r_local.h"
 #include "../sdl/sdl_glw.h"
-#include "../win32/resource.h"
-#ifndef _WIN32
-    #include "SDL2/SDL.h"
-#else
-    #include "SDL.h"
-#endif
 
 static int GLimp_InitGL( void );
 

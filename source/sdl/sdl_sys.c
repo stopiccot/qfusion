@@ -20,8 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // sys_win.h
 
 #include "../qcommon/qcommon.h"
-//#include "../win32/winquake.h"
-//#include "../win32/resource.h"
+#include "SDL2/SDL.h"
 #include <errno.h>
 #include <float.h>
 #include <fcntl.h>
@@ -29,14 +28,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#include <io.h>
 //#include <conio.h>
 #include <limits.h>
-
-#ifndef _WIN32
-    #include "SDL2/SDL.h"
-#else
-    #include "SDL.h"
-#endif
-
-//#include "../win32/conproc.h"
 
 #include "../client/client.h"
 
@@ -476,6 +467,10 @@ static int TranslateSDLKey(int charkey)
 		//case SDLK_SCROLLLOCK:	charkey = K_SCROLLLOCK;	break;
 		//case SDLK_NUMLOCKCLEAR:	charkey = K_NUMLOCK;	break;
 		case SDL_SCANCODE_BACKSPACE : charkey = K_BACKSPACE; break;
+		case SDL_SCANCODE_W : charkey = 'w'; break;
+		case SDL_SCANCODE_A : charkey = 'a'; break;
+		case SDL_SCANCODE_S : charkey = 's'; break;
+		case SDL_SCANCODE_D : charkey = 'd'; break;
 		//case SDLK_BACKSPACE:	charkey = K_BACKSPACE;	break;
 		//case SDLK_UP:			charkey = K_UPARROW;	break;
 		//case SDLK_DOWN:			charkey = K_DOWNARROW;	break;

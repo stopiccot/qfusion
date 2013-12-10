@@ -45,7 +45,6 @@ solution "qfusion"
             "../libsrcs/libpng",
             "../libsrcs/libjpeg",
             "../libsrcs/libRocket/libRocket/Include",
-            "../libsrcs/SDL2/include",
             "win32/include/msvc",
             "win32/include",
         }
