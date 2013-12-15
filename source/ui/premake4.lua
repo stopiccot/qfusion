@@ -45,3 +45,4 @@ project "ui"
     configuration "macosx"
         --links { "Rocket.framework" }
         links { "RocketCoreOSX.framework", "RocketControlsOSX.framework" }
+        includedirs { "../../libsrcs/libRocket/libRocket/Include" }

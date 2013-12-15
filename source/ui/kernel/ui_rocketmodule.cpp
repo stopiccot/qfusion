@@ -323,7 +323,7 @@ void RocketModule::registerCustoms()
 
 	//
 	// DECORATORS
-	registerDecorator( "gradient", GetGradientDecoratorInstancer() );
+	//registerDecorator( "gradient", GetGradientDecoratorInstancer() );
 
 	//
 	// GLOBAL CUSTOM PROPERTIES

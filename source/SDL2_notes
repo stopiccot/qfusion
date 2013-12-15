@@ -3,3 +3,6 @@ questions:
 -- conproc\qhost
 -- joystick input
 -- EXT_texture_edge_clamp on OS X
+-- how to enable Com_Printf logs?
+-- LIB_PREFIX done right
+-- registerDecorator( "gradient", GetGradientDecoratorInstancer() );
