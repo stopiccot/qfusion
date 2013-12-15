@@ -247,6 +247,7 @@ solution "qfusion"
             }
 
             links { "cin", "libcurl.framework", "SDL2.framework", "IOKit.framework", "libpng.framework", "jpeg.framework", "Cocoa.framework", "z"}
+            linkoptions { "-rpath @executable_path/../Frameworks" }
 
     project "qfusion_server"
 
