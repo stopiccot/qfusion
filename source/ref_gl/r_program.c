@@ -730,6 +730,9 @@ static const glsl_feature_t * const glsl_programtypes_features[] =
 #define QF_GLSL_ENABLE_ARB_DRAW_INSTACED "" \
 "#extension GL_ARB_draw_instanced : enable\n"
 
+#define QF_GLSL_DISABLE_ARB_DRAW_INSTACED "" \
+"#undef GL_ARB_draw_instanced\n"
+
 #define QF_BUILTIN_GLSL_MACROS "" \
 "#if !defined(myhalf)\n" \
 "//#if !defined(__GLSL_CG_DATA_TYPES)\n" \
@@ -1398,11 +1401,11 @@ int RP_RegisterProgram( int type, const char *name, const char *deformsKey, cons
 	}
 
 	instancedIdx = i;
-	if( glConfig.shadingLanguageVersion < 400 && glConfig.ext.draw_instanced ) {
+	if( glConfig.shadingLanguageVersion < 400 && glConfig.ext.draw_instanced && glConfig.shadingLanguageVersion >= 140) {
 		shaderStrings[i++] = QF_GLSL_ENABLE_ARB_DRAW_INSTACED;
 	}
 	else {
-		shaderStrings[i++] = "\n";
+		shaderStrings[i++] = QF_GLSL_DISABLE_ARB_DRAW_INSTACED;
 	}
 
 	shaderStrings[i++] = shaderVersion;
