@@ -513,6 +513,7 @@ rserr_t VID_Sys_Init( int x, int y, int width, int height, int displayFrequency,
 */
 void VID_UpdateWindowPosAndSize( int x, int y )
 {
+    return;
 	//RECT r;
 	//int style;
 	//int w, h;
@@ -548,8 +549,8 @@ qboolean VID_GetDisplaySize( int *width, int *height )
 	SDL_DisplayMode mode;
 	SDL_GetDesktopDisplayMode(0, &mode);
 	
-	*width = mode.w;
-	*height = mode.h;
+	*width = 1280;//mode.w;
+	*height = 768;//mode.h;
 
 	return qtrue;
 }
