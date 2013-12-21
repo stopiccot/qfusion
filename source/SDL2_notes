@@ -6,3 +6,5 @@ questions:
 -- how to enable Com_Printf logs?
 -- LIB_PREFIX done right
 -- registerDecorator( "gradient", GetGradientDecoratorInstancer() );
+
+-- R_GetPortalTextureId/R_GetPortalTexture -> 512x512 (r_portalmaps_maxtexsize->integer)
