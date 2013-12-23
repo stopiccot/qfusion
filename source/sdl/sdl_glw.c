@@ -47,7 +47,7 @@ glwstate_t glw_state;
 
 static void VID_SetWindowSize( qboolean fullscreen )
 {
-	if (false && fullscreen)
+	if (qfalse && fullscreen)
 	{
 		SDL_SetWindowFullscreen(glw_state.sdl_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 	}

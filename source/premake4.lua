@@ -61,6 +61,13 @@ solution "qfusion"
         targetsuffix "_mac"
         libdirs { "mac/Frameworks" }
 
+    configuration "linux"
+        includedirs {
+            "../libsrcs/angelscript/sdk/angelscript/include",
+            "../libsrcs/libRocket/libRocket/Include",
+            "/usr/include/freetype2",
+        }
+
     include "angelwrap"
     include "cgame"
     include "cin"
@@ -70,7 +77,7 @@ solution "qfusion"
     include "ref_gl"
     include "snd_openal"
     include "snd_qf"
-    include "tv_server"
+    -- include "tv_server"
     include "ui"
 
     project "qfusion"
@@ -241,7 +248,7 @@ solution "qfusion"
 
         configuration "macosx"
             files {
-                "sdl/sdl_sys_mac.c",
+                "sdl/sdl_sys_osx.c",
                 "unix/unix_fs.c",
                 "unix/unix_net.c",
             }
@@ -249,109 +256,118 @@ solution "qfusion"
             links { "cin", "libcurl.framework", "SDL2.framework", "IOKit.framework", "libpng.framework", "jpeg.framework", "Cocoa.framework", "z"}
             linkoptions { "-rpath @executable_path/../Frameworks" }
 
-    project "qfusion_server"
+        configuration "linux"
+            files {
+                "sdl/sdl_sys_linux.c",
+                "unix/unix_fs.c",
+                "unix/unix_net.c",
+            }
 
-        kind     "WindowedApp"
-        language "C++"
+            links { "SDL2", "curl", "rt", "z"}
 
-        flags   { "WinMain"}
-        defines { "DEDICATED_ONLY" }
+    -- project "qfusion_server"
 
-        files {
-            "qcommon/anticheat.c",
-            "qcommon/ascript.c",
-            "qcommon/base64.c",
-            "qcommon/bsp.c",
-            "qcommon/cjson.c",
-            "null/cl_null.c",
-            "qcommon/cm_main.c",
-            "qcommon/cm_q3bsp.c",
-            "qcommon/cm_trace.c",
-            "qcommon/cmd.c",
-            "qcommon/common.c",
-            "server/sv_web.c",
-            "win32/conproc.c",
-            "qcommon/cvar.c",
-            "qcommon/dynvar.c",
-            "qcommon/files.c",
-            "qcommon/glob.c",
-            "qcommon/irc.c",
-            "qcommon/md5.c",
-            "qcommon/mem.c",
-            "qcommon/mlist.c",
-            "matchmaker/mm_common.c",
-            "matchmaker/mm_query.c",
-            "matchmaker/mm_rating.c",
-            "qcommon/msg.c",
-            "qcommon/net.c",
-            "qcommon/net_chan.c",
-            "qcommon/patch.c",
-            "gameshared/q_math.c",
-            "gameshared/q_shared.c",
-            "qcommon/snap_demos.c",
-            "qcommon/snap_write.c",
-            "server/sv_ccmds.c",
-            "server/sv_client.c",
-            "server/sv_demos.c",
-            "server/sv_game.c",
-            "server/sv_init.c",
-            "server/sv_main.c",
-            "server/sv_mm.c",
-            "server/sv_motd.c",
-            "server/sv_oob.c",
-            "server/sv_send.c",
-            "qcommon/svnrev.c",
-            "gameshared/q_trie.c",
-            "qcommon/webdownload.c",
-            "win32/win_fs.c",
-            "win32/win_net.c",
-            "win32/win_sys.c",
-            "qcommon/wswcurl.c",
-            "qcommon/library.c",
-            "win32/win_lib.c",
-            "gameshared/config.h",
-            "qcommon/anticheat.h",
-            "qcommon/base64.h",
-            "qcommon/bsp.h",
-            "qcommon/cjson.h",
-            "qcommon/cm_local.h",
-            "qcommon/cmodel.h",
-            "win32/conproc.h",
-            "qcommon/cvar.h",
-            "qcommon/dynvar.h",
-            "game/g_public.h",
-            "qcommon/glob.h",
-            "qcommon/md5.h",
-            "matchmaker/mm_common.h",
-            "matchmaker/mm_query.h",
-            "matchmaker/mm_rating.h",
-            "gameshared/q_angelwrap.h",
-            "gameshared/q_arch.h",
-            "gameshared/q_collision.h",
-            "gameshared/q_comref.h",
-            "gameshared/q_cvar.h",
-            "gameshared/q_dynvar.h",
-            "gameshared/q_keycodes.h",
-            "gameshared/q_math.h",
-            "gameshared/q_shared.h",
-            "qcommon/qcommon.h",
-            "qcommon/qfiles.h",
-            "server/server.h",
-            "qcommon/snap_read.h",
-            "qcommon/snap_write.h",
-            "qcommon/svnrev.h",
-            "qcommon/sys_fs.h",
-            "qcommon/sys_library.h",
-            "qcommon/sys_net.h",
-            "gameshared/q_trie.h",
-            "qcommon/version.h",
-            "qcommon/webdownload.h",
-            "win32/winquake.h",
-        }
+    --     kind     "WindowedApp"
+    --     language "C++"
 
-        links {
-            "libcurlstat",
-            "zlibstat",
-            "winmm",
-            "ws2_32",
-        }
+    --     flags   { "WinMain"}
+    --     defines { "DEDICATED_ONLY" }
+
+    --     files {
+    --         "qcommon/anticheat.c",
+    --         "qcommon/ascript.c",
+    --         "qcommon/base64.c",
+    --         "qcommon/bsp.c",
+    --         "qcommon/cjson.c",
+    --         "null/cl_null.c",
+    --         "qcommon/cm_main.c",
+    --         "qcommon/cm_q3bsp.c",
+    --         "qcommon/cm_trace.c",
+    --         "qcommon/cmd.c",
+    --         "qcommon/common.c",
+    --         "server/sv_web.c",
+    --         "win32/conproc.c",
+    --         "qcommon/cvar.c",
+    --         "qcommon/dynvar.c",
+    --         "qcommon/files.c",
+    --         "qcommon/glob.c",
+    --         "qcommon/irc.c",
+    --         "qcommon/md5.c",
+    --         "qcommon/mem.c",
+    --         "qcommon/mlist.c",
+    --         "matchmaker/mm_common.c",
+    --         "matchmaker/mm_query.c",
+    --         "matchmaker/mm_rating.c",
+    --         "qcommon/msg.c",
+    --         "qcommon/net.c",
+    --         "qcommon/net_chan.c",
+    --         "qcommon/patch.c",
+    --         "gameshared/q_math.c",
+    --         "gameshared/q_shared.c",
+    --         "qcommon/snap_demos.c",
+    --         "qcommon/snap_write.c",
+    --         "server/sv_ccmds.c",
+    --         "server/sv_client.c",
+    --         "server/sv_demos.c",
+    --         "server/sv_game.c",
+    --         "server/sv_init.c",
+    --         "server/sv_main.c",
+    --         "server/sv_mm.c",
+    --         "server/sv_motd.c",
+    --         "server/sv_oob.c",
+    --         "server/sv_send.c",
+    --         "qcommon/svnrev.c",
+    --         "gameshared/q_trie.c",
+    --         "qcommon/webdownload.c",
+    --         "win32/win_fs.c",
+    --         "win32/win_net.c",
+    --         "win32/win_sys.c",
+    --         "qcommon/wswcurl.c",
+    --         "qcommon/library.c",
+    --         "win32/win_lib.c",
+    --         "gameshared/config.h",
+    --         "qcommon/anticheat.h",
+    --         "qcommon/base64.h",
+    --         "qcommon/bsp.h",
+    --         "qcommon/cjson.h",
+    --         "qcommon/cm_local.h",
+    --         "qcommon/cmodel.h",
+    --         "win32/conproc.h",
+    --         "qcommon/cvar.h",
+    --         "qcommon/dynvar.h",
+    --         "game/g_public.h",
+    --         "qcommon/glob.h",
+    --         "qcommon/md5.h",
+    --         "matchmaker/mm_common.h",
+    --         "matchmaker/mm_query.h",
+    --         "matchmaker/mm_rating.h",
+    --         "gameshared/q_angelwrap.h",
+    --         "gameshared/q_arch.h",
+    --         "gameshared/q_collision.h",
+    --         "gameshared/q_comref.h",
+    --         "gameshared/q_cvar.h",
+    --         "gameshared/q_dynvar.h",
+    --         "gameshared/q_keycodes.h",
+    --         "gameshared/q_math.h",
+    --         "gameshared/q_shared.h",
+    --         "qcommon/qcommon.h",
+    --         "qcommon/qfiles.h",
+    --         "server/server.h",
+    --         "qcommon/snap_read.h",
+    --         "qcommon/snap_write.h",
+    --         "qcommon/svnrev.h",
+    --         "qcommon/sys_fs.h",
+    --         "qcommon/sys_library.h",
+    --         "qcommon/sys_net.h",
+    --         "gameshared/q_trie.h",
+    --         "qcommon/version.h",
+    --         "qcommon/webdownload.h",
+    --         "win32/winquake.h",
+    --     }
+
+    --     links {
+    --         "libcurlstat",
+    --         "zlibstat",
+    --         "winmm",
+    --         "ws2_32",
+    --     }
