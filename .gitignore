@@ -20,3 +20,8 @@ libsrcs/libRocket/libRocket/Build/obj/
 # Xcode project files
 **.xcodeproj
 *.xcworkspace
+
+# Makefiles
+Makefile
+*.make
+*/Makefile
