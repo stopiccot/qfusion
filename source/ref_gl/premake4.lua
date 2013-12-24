@@ -31,3 +31,6 @@ project "ref_gl"
 
     configuration "macosx"
         links { "libpng.framework", "jpeg.framework", "SDL2.framework" }
+
+    configuration "linux"
+        links { "png", "jpeg", "z", "SDL2" }
