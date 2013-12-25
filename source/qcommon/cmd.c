@@ -1309,7 +1309,7 @@ void Cmd_ExecuteString( const char *text )
 	// We need a global namespace data-structure and a way to check for name-clashes
 	// that does not break seperation of concerns.
 	// Aiwa, 07-14-2006
-		
+
 	assert( cmd_function_trie );
 	assert( cmd_alias_trie );
 	if( Trie_Find( cmd_function_trie, str, TRIE_EXACT_MATCH, (void **)&cmd ) == TRIE_OK )

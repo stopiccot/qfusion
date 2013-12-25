@@ -8,7 +8,7 @@ project "ui"
     -- pchheader "ui_precompiled.h"
     -- pchsource "ui_precompiled.cpp"
 
-    includedirs { "." }
+    includedirs { ".", "../../libsrcs/libRocket/libRocket/Include" }
     defines     { "STATIC_LIB" }
 
     files { 
@@ -43,6 +43,8 @@ project "ui"
         links { "RocketCore", "RocketControls" }
 
     configuration "macosx"
-        --links { "Rocket.framework" }
         links { "RocketCoreOSX.framework", "RocketControlsOSX.framework" }
-        includedirs { "../../libsrcs/libRocket/libRocket/Include" }
+
+    configuration "linux"
+        libdirs { "../../libsrcs/libRocket/libRocket/Build/lib" }
+        links { "RocketWSW" }

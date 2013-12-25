@@ -44,7 +44,6 @@ solution "qfusion"
             "../libsrcs/libfreetype/include",
             "../libsrcs/libpng",
             "../libsrcs/libjpeg",
-            "../libsrcs/libRocket/libRocket/Include",
             "win32/include/msvc",
             "win32/include",
         }
@@ -62,11 +61,14 @@ solution "qfusion"
         libdirs { "mac/Frameworks" }
 
     configuration "linux"
+        targetsuffix "_x86_64"
         includedirs {
             "../libsrcs/angelscript/sdk/angelscript/include",
-            "../libsrcs/libRocket/libRocket/Include",
             "/usr/include/freetype2",
         }
+
+    configuration { "linux", "Debug" }
+        flags { "Symbols" }
 
     include "angelwrap"
     include "cgame"

@@ -19,4 +19,7 @@ project "ftlib"
     configuration "macosx"
         links { "FreeType.framework" }
         includedirs { "../mac/Frameworks/FreeType.framework/Headers"}
+
+    configuration "linux"
+        links { "freetype" }
             
