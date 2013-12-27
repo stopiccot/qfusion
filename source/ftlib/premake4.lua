@@ -1,7 +1,7 @@
 project "ftlib"
 
-    kind      "SharedLib"
-    language  "C"
+    kind         "SharedLib"
+    language     "C"
     qf_targetdir "libs"
     
     files    { 
@@ -13,13 +13,5 @@ project "ftlib"
         "../gameshared/q_shared.c",
     }
 
-    configuration "windows"
-        links { "libfreetypestat" }
-
-    configuration "macosx"
-        links { "FreeType.framework" }
-        includedirs { "../mac/Frameworks/FreeType.framework/Headers"}
-
-    configuration "linux"
-        links { "freetype" }
+    qf_links { "freetype" }
             

@@ -14,10 +14,14 @@ project "snd_qf"
         "../gameshared/q_shared.c",
     }
 
+    qf_links { "ogg", "vorbis", "SDL2" }
+
     configuration "windows"
         files { "../win32/win_snd.c" }
-        links { "libogg_static", "libvorbis_static", "libvorbisfile_static", "libtheora_static", "winmm" }
+        links { "winmm" }
+
+    configuration "linux"
+        files { "../unix/unix_snd.c"}
 
     configuration "macosx"
         files { "../unix/unix_snd.c" }
-        links { "Ogg.framework", "Vorbis.framework", "SDL2.framework" }

@@ -328,34 +328,109 @@ char *Sys_ConsoleInput( void )
 //* 
 //* Print text to the dedicated console
 //*/
-void Sys_ConsoleOutput( char *string )
-{
-//	DWORD dummy;
-//	char text[MAX_CONSOLETEXT+2];	/* need 2 chars for the \r's */
-//
-//	if( !dedicated || !dedicated->integer )
-//		return;
-//
-//	if( console_textlen )
-//	{
-//		text[0] = '\r';
-//		memset( &text[1], ' ', console_textlen );
-//		text[console_textlen+1] = '\r';
-//		text[console_textlen+2] = 0;
-//		WriteFile( houtput, text, console_textlen+2, &dummy, NULL );
-//	}
-//
-//	string = utf8_to_OEM( string );
-//
-//#if 0
-//	WriteFile( houtput, string, (unsigned)strlen( string ), &dummy, NULL );
-//#else
-//	PrintColoredText( string );
-//#endif
-//
-//	if( console_textlen )
-//		WriteFile( houtput, console_text, console_textlen, &dummy, NULL );
-}
+
+// static void Sys_AnsiColorPrint( const char *msg )
+// {
+// 	static char buffer[2096];
+// 	int         length = 0;
+// 	static int  q3ToAnsi[ 8 ] =
+// 	{
+// 		30, // COLOR_BLACK
+// 		31, // COLOR_RED
+// 		32, // COLOR_GREEN
+// 		33, // COLOR_YELLOW
+// 		34, // COLOR_BLUE
+// 		36, // COLOR_CYAN
+// 		35, // COLOR_MAGENTA
+// 		0   // COLOR_WHITE
+// 	};
+
+// 	while( *msg )
+// 	{
+// 		char c = *msg;
+// 		int colorindex;
+
+// 		int gc = Q_GrabCharFromColorString( &msg, &c, &colorindex );
+// 		if( gc == GRABCHAR_COLOR || (gc == GRABCHAR_CHAR && c == '\n') )
+// 		{
+// 			// First empty the buffer
+// 			if( length > 0 )
+// 			{
+// 				buffer[length] = '\0';
+// 				fputs( buffer, stdout );
+// 				length = 0;
+// 			}
+
+// 			if( c == '\n' )
+// 			{
+// 				// Issue a reset and then the newline
+// 				fputs( "\033[0m\n", stdout );
+// 			}
+// 			else
+// 			{
+// 				// Print the color code
+// 				Q_snprintfz( buffer, sizeof( buffer ), "\033[%dm", q3ToAnsi[ colorindex ] );
+// 				fputs( buffer, stdout );
+// 			}
+// 		}
+// 		else if( gc == GRABCHAR_END )
+// 			break;
+// 		else
+// 		{
+// 			if( length >= sizeof( buffer ) - 1 )
+// 				break;
+// 			buffer[length++] = c;
+// 		}
+// 	}
+
+// 	// Empty anything still left in the buffer
+// 	if( length > 0 )
+// 	{
+// 		buffer[length] = '\0';
+// 		fputs( buffer, stdout );
+// 	}
+// }
+
+// void Sys_ConsoleOutput( char *string )
+// {
+// //	DWORD dummy;
+// //	char text[MAX_CONSOLETEXT+2];	/* need 2 chars for the \r's */
+// //
+// //	if( !dedicated || !dedicated->integer )
+// //		return;
+// //
+// //	if( console_textlen )
+// //	{
+// //		text[0] = '\r';
+// //		memset( &text[1], ' ', console_textlen );
+// //		text[console_textlen+1] = '\r';
+// //		text[console_textlen+2] = 0;
+// //		WriteFile( houtput, text, console_textlen+2, &dummy, NULL );
+// //	}
+// //
+// //	string = utf8_to_OEM( string );
+// //
+// //#if 0
+// //	WriteFile( houtput, string, (unsigned)strlen( string ), &dummy, NULL );
+// //#else
+// //	PrintColoredText( string );
+// //#endif
+// //
+// //	if( console_textlen )
+// //		WriteFile( houtput, console_text, console_textlen, &dummy, NULL );
+
+// 	if( nostdout && nostdout->integer )
+// 		return;
+
+// 	if( nostdout_backup_val )
+// 		return;
+
+// #if 0
+// 	fputs( string, stdout );
+// #else
+// 	Sys_AnsiColorPrint( string );
+// #endif
+// }
 
 
 /*

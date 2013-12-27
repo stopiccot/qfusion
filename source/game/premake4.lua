@@ -1,7 +1,7 @@
 project "game"
 
-    kind      "SharedLib"
-    language  "C++"
+    kind         "SharedLib"
+    language     "C++"
     qf_targetdir "base"
     
     files    { 

@@ -46,5 +46,9 @@ project "ui"
         links { "RocketCoreOSX.framework", "RocketControlsOSX.framework" }
 
     configuration "linux"
-        libdirs { "../../libsrcs/libRocket/libRocket/Build/lib" }
-        links { "RocketWSW" }
+        libdirs {
+            "../../libsrcs/libRocket/libRocket/Build/lib",
+            "../../libsrcs/libRocket/libRocket/lib",
+        }
+        
+        links { "RocketWSW", "freetype" }

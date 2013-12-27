@@ -1,7 +1,7 @@
 project "cin"
 
-    kind      "SharedLib"
-    language  "C"
+    kind         "SharedLib"
+    language     "C"
     qf_targetdir "libs"
     
     files    { 
@@ -13,9 +13,5 @@ project "cin"
         "../gameshared/q_shared.c",
     }
 
-    configuration "windows"
-        links { "libogg_static", "libvorbis_static", "libvorbisfile_static", "libtheora_static" }
-
-    configuration "macosx"
-        links { "Ogg.framework", "Vorbis.framework", "Theora.framework" }
+    qf_links { "ogg", "vorbis", "theora" }
 

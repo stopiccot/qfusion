@@ -1,7 +1,7 @@
 project "ref_gl"
 
-    kind      "SharedLib"
-    language  "C"
+    kind         "SharedLib"
+    language     "C"
     qf_targetdir "libs"
     
     files    { 
@@ -26,11 +26,4 @@ project "ref_gl"
         "../sdl/sdl_qgl.c",
     }
 
-    configuration "windows"
-        links { "libpngstat", "libjpegstat", "zlibstat", "SDL2" }
-
-    configuration "macosx"
-        links { "libpng.framework", "jpeg.framework", "SDL2.framework" }
-
-    configuration "linux"
-        links { "png", "jpeg", "z", "SDL2" }
+    qf_links { "png", "jpeg", "SDL2" }

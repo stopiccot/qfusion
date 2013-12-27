@@ -1,11 +1,8 @@
 project "angelwrap"
 
-    kind      "SharedLib"
-    language  "C++"
-
+    kind         "SharedLib"
+    language     "C++"
     qf_targetdir "libs"
-
-    defines { "CVAR_FORCESET" }
     
     files    { 
         "*.h",
@@ -19,8 +16,4 @@ project "angelwrap"
         "../gameshared/q_shared.c",
     }
 
-    configuration "windows"
-        links { "angelscript" }
-
-    configuration "macosx"
-        links { "angelscript.framework" }
+    qf_links { "angelscript" }

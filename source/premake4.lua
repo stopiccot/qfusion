@@ -1,9 +1,69 @@
 solution "qfusion"
     configurations { "Debug", "Release" }
+    
     if os.is("macosx") then
         platforms { "native" }
     else
         platforms { "x32", "x64" }
+    end
+
+    qf_libs = {
+        angelscript = {
+            windows = { "angelscript" },
+            macosx  = { "angelscript.framework" },
+            linux   = { "angelscript" }
+        },
+        ogg = {
+            windows = { "libogg_static" },
+            macosx  = { "Ogg.framework" },
+            linux   = { "ogg" }
+        },
+        vorbis = {
+            windows = { "libvorbis_static", "libvorbisfile_static" },
+            macosx  = { "Vorbis.framework" },
+            linux   = { "vorbis" }
+        },
+        theora = {
+            windows = { "libtheora_static" },
+            macosx  = { "Theora.framework" },
+            linux   = { "theora" } 
+        },
+        freetype = {
+            windows = { "libfreetypestat" },
+            macosx  = { "FreeType.framework" },
+            linux   = { "freetype" } 
+        },
+        png = {
+            windows = { "libpngstat", "zlibstat" },
+            macosx  = { "libpng.framework" },
+            linux   = { "png", "z" } 
+        },
+        jpeg = {
+            windows = { "libjpegstat" },
+            macosx  = { "jpeg.framework" },
+            linux   = { "jpeg" } 
+        },
+        SDL2 = {
+            windows = { "SDL2" },
+            macosx  = { "SDL2.framework" },
+            linux   = { "SDL2" } 
+        }
+    }
+
+    function qf_links(libs) 
+        local platform_libs = {}
+
+        for i, lib in ipairs(libs) do
+            if qf_libs[lib] then
+                for j, platform_lib in ipairs(qf_libs[lib][os.get()]) do
+                    table.insert(platform_libs, platform_lib)
+                end
+            else
+                table.insert(platform_libs, lib)
+            end
+        end
+
+        links(platform_libs)
     end
 
     function qf_targetdir(dir)
@@ -59,13 +119,15 @@ solution "qfusion"
     configuration "macosx"
         targetsuffix "_mac"
         libdirs { "mac/Frameworks" }
+        includedirs { "../mac/Frameworks/FreeType.framework/Headers"}
 
     configuration "linux"
         targetsuffix "_x86_64"
         includedirs {
-            "../libsrcs/angelscript/sdk/angelscript/include",
             "/usr/include/freetype2",
+            "../libsrcs/angelscript/sdk/angelscript/include",
         }
+        libdirs { "../libsrcs/angelscript/sdk/angelscript/lib" }
 
     configuration { "linux", "Debug" }
         flags { "Symbols" }
@@ -250,7 +312,8 @@ solution "qfusion"
 
         configuration "macosx"
             files {
-                "sdl/sdl_sys_osx.c",
+                "sdl/sdl_sys_unix.c",
+                "sdl/sdl_sys_osx.m",
                 "unix/unix_fs.c",
                 "unix/unix_net.c",
             }
@@ -260,6 +323,7 @@ solution "qfusion"
 
         configuration "linux"
             files {
+                "sdl/sdl_sys_unix.c",
                 "sdl/sdl_sys_linux.c",
                 "unix/unix_fs.c",
                 "unix/unix_net.c",
