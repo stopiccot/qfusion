@@ -52,6 +52,7 @@ endif()
 
 option(USE_SDL2 "Build using SDL2" OFF)
 option(GAME_MODULES_ONLY "Only build game modules" OFF)
+option(USE_SDL2_IMAGE "Build using SDL2_image" OFF)
 
 # Windows specific settings
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
@@ -178,8 +179,14 @@ if (NOT GAME_MODULES_ONLY)
     find_package(CURL REQUIRED)
     find_package(ZLIB REQUIRED)
     find_package(Freetype REQUIRED)
-    find_package(JPEG REQUIRED)
-    find_package(PNG REQUIRED)
+    
+    if (USE_SDL2_IMAGE)
+        find_package(SDL2_image REQUIRED)
+        add_definitions(-DUSE_SDL2_IMAGE)
+    else()
+        find_package(JPEG REQUIRED)
+        find_package(PNG REQUIRED)
+    endif()
 
     # We need SDL only on non-Windows platforms or when with SDL2-backend
     if (USE_SDL2 OR (${CMAKE_SYSTEM_NAME} MATCHES "Linux"))
