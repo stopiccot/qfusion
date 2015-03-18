@@ -1377,7 +1377,7 @@ size_t IN_IME_GetComposition( char *str, size_t strSize, size_t *cursorPos, size
 			ret += Q_WCharUtf8Length( compStr[i] );
 	}
 
-	if( cursorPos )
+	/*if( cursorPos )
 	{
 		cursor = LOWORD( qimmGetCompositionString( in_winime_context, GCS_CURSORPOS, NULL, 0 ) );
 		for( i = 0; ( i < cursor ) && ( i < len ); i++ )
@@ -1420,7 +1420,7 @@ size_t IN_IME_GetComposition( char *str, size_t strSize, size_t *cursorPos, size
 					*convLen = convutflen;
 			}
 		}
-	}
+	}*/
 
 	return ret;
 }
@@ -1430,7 +1430,13 @@ size_t IN_IME_GetComposition( char *str, size_t strSize, size_t *cursorPos, size
 */
 unsigned int IN_IME_GetCandidates( char * const *cands, size_t candSize, unsigned int maxCands, int *selected, int *firstKey )
 {
-	size_t candListSize;
+	if (selected)
+		*selected = -1;
+	if (firstKey)
+		*firstKey = 1;
+	return 0;
+
+	/*size_t candListSize;
 	CANDIDATELIST *candList = in_winime_candList;
 	unsigned int i;
 
@@ -1477,7 +1483,7 @@ unsigned int IN_IME_GetCandidates( char * const *cands, size_t candSize, unsigne
 			*firstKey = 0;
 	}
 
-	return maxCands;
+	return maxCands;*/
 }
 
 /*

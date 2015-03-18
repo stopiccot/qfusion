@@ -12,6 +12,11 @@ cvar_t *in_disablemacosxmouseaccel;
 
 static int mx, my;
 
+static bool in_ime_enabled = false;
+static char in_ime_composition[SDL_TEXTEDITINGEVENT_TEXT_SIZE];
+static Sint32 in_ime_cursor;
+static Sint32 in_ime_selection_len;
+
 #if defined( __APPLE__ )
 void IN_SetMouseScalingEnabled( bool isRestore );
 #else
@@ -165,8 +170,20 @@ static wchar_t TranslateSDLScancode(SDL_Scancode scancode)
 		case SDL_SCANCODE_9:			charkey = '9';			break;
 		case SDL_SCANCODE_0:			charkey = '0';			break;
 
+		case SDL_SCANCODE_MINUS:		charkey = '-';			break;
+		case SDL_SCANCODE_EQUALS:		charkey = '=';			break;
+		case SDL_SCANCODE_BACKSLASH:	charkey = '\\';			break;
+		case SDL_SCANCODE_COMMA:		charkey = ',';			break;
+		case SDL_SCANCODE_PERIOD:		charkey = '.';			break;
+		case SDL_SCANCODE_SLASH:		charkey = '/';			break;
+		case SDL_SCANCODE_LEFTBRACKET:	charkey = '[';			break;
+		case SDL_SCANCODE_RIGHTBRACKET:	charkey = ']';			break;
+		case SDL_SCANCODE_SEMICOLON:	charkey = ';';			break;
+		case SDL_SCANCODE_APOSTROPHE:	charkey = '\'';			break;
+
 		default: break;
 	}
+
 	return charkey;
 }
 
@@ -239,6 +256,12 @@ static void HandleEvents( void )
 					Key_CharEvent( key, charkey );
 					SDL_free( wtext );
 				}
+				break;
+
+			case SDL_TEXTEDITING:
+				memcpy(in_ime_composition, event.edit.text, SDL_TEXTEDITINGEVENT_TEXT_SIZE);
+				in_ime_cursor = event.edit.start;
+				in_ime_selection_len = event.edit.length;
 				break;
 
 			case SDL_MOUSEMOTION:
@@ -371,11 +394,21 @@ void IN_ShowSoftKeyboard( bool show )
  */
 void IN_IME_Enable( bool enable )
 {
+	in_ime_enabled = enable;
 }
 
 size_t IN_IME_GetComposition( char *str, size_t strSize, size_t *cursorPos, size_t *convStart, size_t *convLen )
 {
-	if( str && strSize )
+	//WCHAR compStr[IN_WINIME_COMPSTR_LENGTH + 1];
+	//size_t compStrLengths[IN_WINIME_COMPSTR_LENGTH];
+	//char compAttr[IN_WINIME_COMPSTR_LENGTH + 1];
+	//int len, attrLen, cursor, attr, start = -1;
+	//size_t cursorutf = 0, startutf = 0, convutflen = 0, utflen, ret = 0;
+
+	if( !strSize )
+		str = NULL;
+
+	if( str )
 		str[0] = '\0';
 	if( cursorPos )
 		*cursorPos = 0;
@@ -383,7 +416,51 @@ size_t IN_IME_GetComposition( char *str, size_t strSize, size_t *cursorPos, size
 		*convStart = 0;
 	if( convLen )
 		*convLen = 0;
-	return 0;
+
+	if( !in_ime_enabled )
+		return 0;
+
+	if (!in_ime_composition)
+		return 0;
+
+	size_t ret = 0;
+
+	if (str) {
+		// in_ime_composition is already an UTF-8 string so we need just to escape colors
+		// TODO: character-by-charater instead byte-by-byte
+		size_t len = strlen(in_ime_composition);
+		for (size_t i = 0; i < len; i++) {
+			if (in_ime_composition[i] != Q_COLOR_ESCAPE) {
+				if ((ret + 1) >= strSize) {
+					break;
+				}
+
+				str[ret++] = in_ime_composition[i];
+			}
+			else {
+				if ((ret + 2) >= strSize) {
+					break;
+				}
+
+				str[ret++] = Q_COLOR_ESCAPE;
+				str[ret++] = Q_COLOR_ESCAPE;
+			}
+		}
+
+		str[ret] = '\0';
+		Q_FixTruncatedUtf8(str); // to fix last potentially half-copied utf8 char
+	}
+
+	/*if( cursorPos )
+	{
+		cursor = LOWORD( qimmGetCompositionString( in_winime_context, GCS_CURSORPOS, NULL, 0 ) );
+		for( int i = 0; ( i < cursor ) && ( i < len ); i++ )
+			cursorutf += compStrLengths[i];
+		clamp_high( cursorutf, ret );
+		*cursorPos = cursorutf;
+	}*/
+
+	return ret;
 }
 
 unsigned int IN_IME_GetCandidates( char * const *cands, size_t candSize, unsigned int maxCands, int *selected, int *firstKey )

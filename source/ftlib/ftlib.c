@@ -773,7 +773,7 @@ static qfontfamily_t *FTLIB_GetRegisterFontFamily( const char *family, int style
 
 	qfamily = best;
 	if( qfamily == NULL ) {
-		Com_Printf( S_COLOR_YELLOW "Warning: Unknown font family '%s'\n", family );
+		// Com_Printf( S_COLOR_YELLOW "Warning: Unknown font family '%s'\n", family );
 	}
 
 	return qfamily;
