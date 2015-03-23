@@ -249,6 +249,8 @@ static void HandleEvents( void )
 					#define UCS_2_INTERNAL "UCS-2BE"
 				#endif
 
+				Com_Printf("SDL_TEXTINPUT: \"%s\"\n", event.text.text);
+
 				wtext = (Uint16 *)SDL_iconv_string( UCS_2_INTERNAL, "UTF-8", event.text.text, SDL_strlen( event.text.text ) + 1 );
 				if( wtext ) {
 					wchar_t charkey = wtext[0];
