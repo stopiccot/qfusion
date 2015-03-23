@@ -1374,7 +1374,20 @@ size_t IN_IME_GetComposition( char *str, size_t strSize, size_t *cursorPos, size
 	else
 	{
 		for( i = 0; i < len; i++ )
-			ret += Q_WCharUtf8Length( compStr[i] );
+		{
+			utflen = compStrLengths[i];
+			if( ( ret + utflen ) >= strSize )
+				break;
+
+			if( compStr[i] == Q_COLOR_ESCAPE )
+				str[ret] = str[ret + 1] = Q_COLOR_ESCAPE;
+			else
+				Q_WCharToUtf8( compStr[i], str + ret, utflen + 1 );
+			ret += utflen;
+		}
+		str[ret] = '\0';
+
+		Com_Printf("IN_IME_GetComposition: \"%s\"\n", str);
 	}
 
 	/*if( cursorPos )

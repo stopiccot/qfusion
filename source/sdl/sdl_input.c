@@ -449,6 +449,8 @@ size_t IN_IME_GetComposition( char *str, size_t strSize, size_t *cursorPos, size
 
 		str[ret] = '\0';
 		Q_FixTruncatedUtf8(str); // to fix last potentially half-copied utf8 char
+
+		Com_Printf("IN_IME_GetComposition: \"%s\"\n", str);
 	}
 
 	/*if( cursorPos )
