@@ -205,7 +205,6 @@ static void key_event( const SDL_KeyboardEvent *event, const bool state )
 
 static void HandleEvents( void )
 {
-	Uint16 *wtext = NULL;
 	SDL_PumpEvents();
 
 	SDL_Event event;
@@ -251,12 +250,16 @@ static void HandleEvents( void )
 
 				Com_Printf("SDL_TEXTINPUT: \"%s\"\n", event.text.text);
 
-				wtext = (Uint16 *)SDL_iconv_string( UCS_2_INTERNAL, "UTF-8", event.text.text, SDL_strlen( event.text.text ) + 1 );
-				if( wtext ) {
-					wchar_t charkey = wtext[0];
-					int key = ( charkey <= 255 ) ? charkey : 0;
-					Key_CharEvent( key, charkey );
-					SDL_free( wtext );
+				Uint16 *wtext = (Uint16 *)SDL_iconv_string(UCS_2_INTERNAL, "UTF-8", event.text.text, SDL_strlen(event.text.text) + 1);
+				if (wtext) {
+					// TEXTINPUT may contain more than one letter
+					for (Uint16* wtext_letter = wtext; *wtext_letter; wtext_letter++) {
+						wchar_t charkey = *wtext_letter;
+						int key = (charkey <= 255) ? charkey : 0;
+						Key_CharEvent(key, charkey);
+					}
+
+					SDL_free(wtext);
 				}
 				break;
 
