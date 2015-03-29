@@ -1,4 +1,6 @@
 #include <SDL.h>
+#include <SDL_syswm.h>
+#include "sdl_glw.h"
 #include "../client/client.h"
 #include "sdl_input_joy.h"
 
@@ -16,6 +18,7 @@ static bool in_ime_enabled = false;
 static char in_ime_composition[SDL_TEXTEDITINGEVENT_TEXT_SIZE];
 static Sint32 in_ime_cursor;
 static Sint32 in_ime_selection_len;
+static bool ime_input = false;
 
 #if defined( __APPLE__ )
 void IN_SetMouseScalingEnabled( bool isRestore );
@@ -205,13 +208,33 @@ static void key_event( const SDL_KeyboardEvent *event, const bool state )
 
 static void HandleEvents( void )
 {
+	Uint16* wtext;
+
 	SDL_PumpEvents();
 
 	SDL_Event event;
 
+	SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);
+	
 	while( SDL_PollEvent( &event ) ) {
 		switch( event.type ) {
+			case SDL_SYSWMEVENT:
+				if (event.syswm.msg->msg.win.msg == WM_IME_STARTCOMPOSITION) {
+					Com_Printf("WM_IME_STARTCOMPOSITION\n");
+					ime_input = true;
+				}
+				if (event.syswm.msg->msg.win.msg == WM_IME_ENDCOMPOSITION) {
+					Com_Printf("WM_IME_ENDCOMPOSITION\n");
+					ime_input = false;
+				}
+				break;
+
 			case SDL_KEYDOWN:
+				if (ime_input) {
+					Com_Printf("SDL_KEYDOWN skipped\n");
+					return;
+				}
+
 				key_event( &event.key, true );
 
 				// Emulate copy/paste
@@ -220,6 +243,8 @@ static void HandleEvents( void )
 				#else
 					#define KEYBOARD_COPY_PASTE_MODIFIER KMOD_CTRL
 				#endif
+
+				Com_Printf("SDL_KEYDOWN: %d %d\n", event.key.keysym.scancode, event.key.keysym.sym);
 				
 				if( event.key.keysym.sym == SDLK_c ) {
 					if( event.key.keysym.mod & KEYBOARD_COPY_PASTE_MODIFIER ) {
@@ -235,6 +260,13 @@ static void HandleEvents( void )
 				break;
 
 			case SDL_KEYUP:
+				if (ime_input) {
+					Com_Printf("SDL_KEYUP skipped\n");
+					return;
+				}
+
+				Com_Printf("SDL_KEYUP: %d %d\n", event.key.keysym.scancode, event.key.keysym.sym);
+
 				key_event( &event.key, false );
 				break;
 
@@ -250,7 +282,7 @@ static void HandleEvents( void )
 
 				Com_Printf("SDL_TEXTINPUT: \"%s\"\n", event.text.text);
 
-				Uint16 *wtext = (Uint16 *)SDL_iconv_string(UCS_2_INTERNAL, "UTF-8", event.text.text, SDL_strlen(event.text.text) + 1);
+				wtext = (Uint16 *)SDL_iconv_string(UCS_2_INTERNAL, "UTF-8", event.text.text, SDL_strlen(event.text.text) + 1);
 				if (wtext) {
 					// TEXTINPUT may contain more than one letter
 					for (Uint16* wtext_letter = wtext; *wtext_letter; wtext_letter++) {
@@ -455,7 +487,7 @@ size_t IN_IME_GetComposition( char *str, size_t strSize, size_t *cursorPos, size
 		str[ret] = '\0';
 		Q_FixTruncatedUtf8(str); // to fix last potentially half-copied utf8 char
 
-		Com_Printf("IN_IME_GetComposition: \"%s\"\n", str);
+		//Com_Printf("IN_IME_GetComposition: \"%s\"\n", str);
 	}
 
 	/*if( cursorPos )

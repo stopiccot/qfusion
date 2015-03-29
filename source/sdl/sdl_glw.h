@@ -22,6 +22,7 @@
 #define __SDL_GLW_H_
 
 #include <SDL.h>
+#include "../gameshared/q_cvar.h"
 
 typedef struct
 {
