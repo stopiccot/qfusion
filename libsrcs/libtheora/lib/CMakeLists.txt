@@ -115,4 +115,5 @@ else()
         PUBLIC_HEADER "${THEORA_PUBLIC_HEADERS}"
         OUTPUT_NAME Theora
     )
+    target_link_libraries(theora ${OGG_LIBRARIES})  
 endif()
