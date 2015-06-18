@@ -148,7 +148,7 @@ if(PNG_FRAMEWORK)
     MACOSX_FRAMEWORK_IDENTIFIER org.libpng.libpng
     XCODE_ATTRIBUTE_INSTALL_PATH "@rpath"
     PUBLIC_HEADER "${libpng_public_hdrs}"
-    OUTPUT_NAME png)
+    OUTPUT_NAME Png)
   target_link_libraries(${PNG_LIB_NAME_FRAMEWORK} ${ZLIB_LIBRARY} ${M_LIBRARY})
 endif()
 
