@@ -11,7 +11,7 @@
  ********************************************************************
 
   function: routines for validating encoder granulepos generation
-  last mod: $Id: granulepos.c 16503 2009-08-22 18:14:02Z giles $
+  last mod: $Id$
 
  ********************************************************************/
 

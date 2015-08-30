@@ -11,7 +11,7 @@
  ********************************************************************
 
   function: routines for validating comment header code
-  last mod: $Id: comment_theora.c 16503 2009-08-22 18:14:02Z giles $
+  last mod: $Id$
 
  ********************************************************************/
 

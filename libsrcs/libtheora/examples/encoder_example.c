@@ -12,7 +12,7 @@
 
   function: example encoder application; makes an Ogg Theora/Vorbis
             file from YUV4MPEG2 and WAV input
-  last mod: $Id: encoder_example.c 16517 2009-08-25 19:48:57Z giles $
+  last mod: $Id$
 
  ********************************************************************/
 
@@ -31,6 +31,7 @@
 #if !defined(_FILE_OFFSET_BITS)
 #define _FILE_OFFSET_BITS 64
 #endif
+/*#define OC_COLLECT_METRICS*/
 
 #include <stdio.h>
 #if !defined(_WIN32)
@@ -61,7 +62,15 @@ static double rint(double x)
 }
 #endif
 
-const char *optstring = "b:e:o:a:A:v:V:s:S:f:F:ck:d:z:\1\2\3\4";
+#if defined(OC_COLLECT_METRICS)
+# define TH_ENCCTL_SET_METRICS_FILE (0x8000)
+#endif
+
+const char *optstring = "b:e:o:a:A:v:V:s:S:f:F:qck:d:z:\1\2\3\4"
+#if defined(OC_COLLECT_METRICS)
+ "m:"
+#endif
+ ;
 struct option options [] = {
   {"begin-time",required_argument,NULL,'b'},
   {"end-time",required_argument,NULL,'e'},
@@ -74,6 +83,7 @@ struct option options [] = {
   {"aspect-denominator",required_argument,NULL,'S'},
   {"framerate-numerator",required_argument,NULL,'f'},
   {"framerate-denominator",required_argument,NULL,'F'},
+  {"quiet",no_argument,NULL,'q'},
   {"vp3-compatible",no_argument,NULL,'c'},
   {"speed",required_argument,NULL,'z'},
   {"soft-target",no_argument,NULL,'\1'},
@@ -82,6 +92,9 @@ struct option options [] = {
   {"two-pass",no_argument,NULL,'\2'},
   {"first-pass",required_argument,NULL,'\3'},
   {"second-pass",required_argument,NULL,'\4'},
+#if defined(OC_COLLECT_METRICS)
+  {"metrics-file",required_argument,NULL,'m'},
+#endif
   {NULL,0,NULL,0}
 };
 
@@ -96,6 +109,8 @@ int audio_hz=0;
 float audio_q=.1f;
 int audio_r=-1;
 int vp3_compatible=0;
+
+int quiet=0;
 
 int frame_w=0;
 int frame_h=0;
@@ -209,7 +224,14 @@ static void usage(void){
           "                                  --soft-target is used) and infinite for\n"
           "                                  two-pass encoding.\n"
           "   -b --begin-time <h:m:s.d>      Begin encoding at offset into input\n"
-          "   -e --end-time <h:m:s.d>        End encoding at offset into input\n"
+          "   -e --end-time <h:m:s.d>        End encoding at offset into input\n\n"
+          "   -q --quiet                     Don't print progress information.\n\n"
+#if defined(OC_COLLECT_METRICS)
+          "   -m --metrics-filename          File in which to accumulate mode decision\n"
+          "                                  metrics. Statistics from the current\n"
+          "                                  encode will be merged with those already\n"
+          "                                  in the file if it exists.\n\n"
+#endif
           "encoder_example accepts only uncompressed RIFF WAV format audio and\n"
           "YUV4MPEG2 uncompressed video.\n\n");
   exit(1);
@@ -771,8 +793,10 @@ static void id_file(char *f){
               ret=fread(buffer,1,4,test);
               if(ret<4)goto riff_err;
 
-              fprintf(stderr,"File %s is 16 bit %d channel %d Hz RIFF WAV audio.\n",
-                      f,audio_ch,audio_hz);
+              if(!quiet){
+                fprintf(stderr,"File %s is 16 bit %d channel %d Hz RIFF WAV audio.\n",
+                        f,audio_ch,audio_hz);
+              }
 
               return;
             }
@@ -825,6 +849,7 @@ static void id_file(char *f){
       if(strcmp(chroma_type,"420")==0||strcmp(chroma_type,"420jpeg")==0){
         src_c_dec_h=dst_c_dec_h=src_c_dec_v=dst_c_dec_v=2;
         y4m_dst_buf_read_sz=pic_w*pic_h+2*((pic_w+1)/2)*((pic_h+1)/2);
+        /*Natively supported: no conversion required.*/
         y4m_aux_buf_sz=y4m_aux_buf_read_sz=0;
         y4m_convert=y4m_convert_null;
       }
@@ -852,6 +877,14 @@ static void id_file(char *f){
         /*Chroma filter required: read into the aux buf first.*/
         y4m_aux_buf_sz=y4m_aux_buf_read_sz=2*((pic_w+1)/2)*pic_h;
         y4m_convert=y4m_convert_42xmpeg2_42xjpeg;
+      }
+      else if(strcmp(chroma_type,"422jpeg")==0){
+        src_c_dec_h=dst_c_dec_h=2;
+        src_c_dec_v=dst_c_dec_v=1;
+        y4m_dst_buf_read_sz=pic_w*pic_h+2*((pic_w+1)/2)*pic_h;
+        /*Natively supported: no conversion required.*/
+        y4m_aux_buf_sz=y4m_aux_buf_read_sz=0;
+        y4m_convert=y4m_convert_null;
       }
       else if(strcmp(chroma_type,"411")==0){
         src_c_dec_h=4;
@@ -897,8 +930,10 @@ static void id_file(char *f){
 
       video=test;
 
-      fprintf(stderr,"File %s is %dx%d %.02f fps %s video.\n",
-              f,pic_w,pic_h,(double)video_fps_n/video_fps_d,chroma_type);
+      if(!quiet){
+        fprintf(stderr,"File %s is %dx%d %.02f fps %s video.\n",
+                f,pic_w,pic_h,(double)video_fps_n/video_fps_d,chroma_type);
+      }
 
       return;
     }
@@ -918,6 +953,9 @@ static void id_file(char *f){
 int spinner=0;
 char *spinascii="|/-\\";
 void spinnit(void){
+  if(quiet){
+    return;
+  }
   spinner++;
   if(spinner==4)spinner=0;
   fprintf(stderr,"\r%c",spinascii[spinner]);
@@ -931,8 +969,8 @@ int fetch_and_process_audio(FILE *audio,ogg_page *audiopage,
   static ogg_int64_t samples_sofar=0;
   ogg_packet op;
   int i,j;
-  ogg_int64_t beginsample = audio_hz*begin_sec + audio_hz*begin_usec*.000001;
-  ogg_int64_t endsample = audio_hz*end_sec + audio_hz*end_usec*.000001;
+  ogg_int64_t beginsample = audio_hz*(begin_sec+begin_usec*.000001);
+  ogg_int64_t endsample = audio_hz*(end_sec+end_usec*.000001);
 
   while(audio && !audioflag){
     /* process any audio already buffered */
@@ -1016,16 +1054,14 @@ int fetch_and_process_video_packet(FILE *video,FILE *twopass_file,int passno,
  th_enc_ctx *td,ogg_packet *op){
   int                        ret;
   int                        pic_sz;
-  int                        frame_c_w;
-  int                        frame_c_h;
   int                        c_w;
   int                        c_h;
   int                        c_sz;
   ogg_int64_t                beginframe;
   ogg_int64_t                endframe;
   spinnit();
-  beginframe=(video_fps_n*begin_sec+video_fps_n*begin_usec*.000001)/video_fps_d;
-  endframe=(video_fps_n*end_sec+video_fps_n*end_usec*.000001)/video_fps_d;
+  beginframe=video_fps_n*(begin_sec+begin_usec*.000001)/video_fps_d;
+  endframe=video_fps_n*(end_sec+end_usec*.000001)/video_fps_d;
   if(frame_state==-1){
     /* initialize the double frame buffer */
     yuvframe[0]=(unsigned char *)malloc(y4m_dst_buf_sz);
@@ -1034,8 +1070,6 @@ int fetch_and_process_video_packet(FILE *video,FILE *twopass_file,int passno,
     frame_state=0;
   }
   pic_sz=pic_w*pic_h;
-  frame_c_w=frame_w/dst_c_dec_h;
-  frame_c_h=frame_h/dst_c_dec_v;
   c_w=(pic_w+dst_c_dec_h-1)/dst_c_dec_h;
   c_h=(pic_h+dst_c_dec_v-1)/dst_c_dec_v;
   c_sz=c_w*c_h;
@@ -1124,22 +1158,21 @@ int fetch_and_process_video_packet(FILE *video,FILE *twopass_file,int passno,
       else buf_pos+=ret;
     }
   }
-  /*We submit the buffer to the library as if it were padded, but we do not
-     actually allocate space for the padding.
-    This is okay, because with the 1.0 API the library will never read data from the padded
-     region.*/
-  ycbcr[0].width=frame_w;
-  ycbcr[0].height=frame_h;
+  /*We submit the buffer using the size of the picture region.
+    libtheora will pad the picture region out to the full frame size for us,
+     whether we pass in a full frame or not.*/
+  ycbcr[0].width=pic_w;
+  ycbcr[0].height=pic_h;
   ycbcr[0].stride=pic_w;
-  ycbcr[0].data=yuvframe[0]-pic_x-pic_y*pic_w;
-  ycbcr[1].width=frame_c_w;
-  ycbcr[1].height=frame_c_h;
+  ycbcr[0].data=yuvframe[0];
+  ycbcr[1].width=c_w;
+  ycbcr[1].height=c_h;
   ycbcr[1].stride=c_w;
-  ycbcr[1].data=yuvframe[0]+pic_sz-(pic_x/dst_c_dec_h)-(pic_y/dst_c_dec_v)*c_w;
-  ycbcr[2].width=frame_c_w;
-  ycbcr[2].height=frame_c_h;
+  ycbcr[1].data=yuvframe[0]+pic_sz;
+  ycbcr[2].width=c_w;
+  ycbcr[2].height=c_h;
   ycbcr[2].stride=c_w;
-  ycbcr[2].data=ycbcr[1].data+c_sz;
+  ycbcr[2].data=yuvframe[0]+pic_sz+c_sz;
   th_encode_ycbcr_in(td,ycbcr);
   {
     unsigned char *temp=yuvframe[0];
@@ -1207,6 +1240,34 @@ static int ilog(unsigned _v){
   return ret;
 }
 
+static int parse_time(long *_sec,long *_usec,const char *_optarg){
+  double      secf;
+  long        secl;
+  const char *pos;
+  char       *end;
+  int         err;
+  err=0;
+  secl=0;
+  pos=strchr(_optarg,':');
+  if(pos!=NULL){
+    char *pos2;
+    secl=strtol(_optarg,&end,10)*60;
+    err|=pos!=end;
+    pos2=strchr(++pos,':');
+    if(pos2!=NULL){
+      secl=(secl+strtol(pos,&end,10))*60;
+      err|=pos2!=end;
+      pos=pos2+1;
+    }
+  }
+  else pos=_optarg;
+  secf=strtod(pos,&end);
+  if(err||*end!='\0')return -1;
+  *_sec=secl+(long)floor(secf);
+  *_usec=(long)((secf-floor(secf))*1E6+0.5);
+  return 0;
+}
+
 int main(int argc,char *argv[]){
   int c,long_option_index,ret;
 
@@ -1245,6 +1306,10 @@ int main(int argc,char *argv[]){
   fpos_t video_rewind_pos;
   int twopass=0;
   int passno;
+
+  clock_t clock_start=clock();
+  clock_t clock_end;
+  double elapsed;
 
 #ifdef _WIN32 /* We need to set stdin/stdout to binary mode. Damn windows. */
   /* if we were reading/writing a file, it would also need to in
@@ -1319,6 +1384,10 @@ int main(int argc,char *argv[]){
       video_fps_d=(int)rint(atof(optarg));
       break;
 
+    case 'q':
+      quiet=1;
+      break;
+
     case 'c':
       vp3_compatible=1;
       break;
@@ -1349,51 +1418,17 @@ int main(int argc,char *argv[]){
 
     case 'b':
       {
-        char *pos=strchr(optarg,':');
-        begin_sec=atol(optarg);
-        if(pos){
-          char *pos2=strchr(++pos,':');
-          begin_sec*=60;
-          begin_sec+=atol(pos);
-          if(pos2){
-            pos2++;
-            begin_sec*=60;
-            begin_sec+=atol(pos2);
-            pos=pos2;
-          }
-        }else
-          pos=optarg;
-        pos=strchr(pos,'.');
-        if(pos){
-          int digits = strlen(++pos);
-          begin_usec=atol(pos);
-          while(digits++ < 6)
-            begin_usec*=10;
+        if(parse_time(&begin_sec,&begin_usec,optarg)<0){
+          fprintf(stderr,"Error parsing begin time '%s'.\n",optarg);
+          exit(1);
         }
       }
       break;
     case 'e':
       {
-        char *pos=strchr(optarg,':');
-        end_sec=atol(optarg);
-        if(pos){
-          char *pos2=strchr(++pos,':');
-          end_sec*=60;
-          end_sec+=atol(pos);
-          if(pos2){
-            pos2++;
-            end_sec*=60;
-            end_sec+=atol(pos2);
-            pos=pos2;
-          }
-        }else
-          pos=optarg;
-        pos=strchr(pos,'.');
-        if(pos){
-          int digits = strlen(++pos);
-          end_usec=atol(pos);
-          while(digits++ < 6)
-            end_usec*=10;
+        if(parse_time(&end_sec,&end_usec,optarg)<0){
+          fprintf(stderr,"Error parsing end time '%s'.\n",optarg);
+          exit(1);
         }
       }
       break;
@@ -1421,6 +1456,16 @@ int main(int argc,char *argv[]){
         exit(1);
       }
       break;
+#if defined(OC_COLLECT_METRICS)
+    case 'm':
+      if(th_encode_ctl(NULL,TH_ENCCTL_SET_METRICS_FILE,
+       optarg,strlen(optarg)+1)){
+        fprintf(stderr,"Unable to set metrics collection file name.\n");
+        fprintf(stderr,"libtheora not compiled with OC_COLLECT_METRICS?\n");
+        exit(1);
+      }
+      break;
+#endif
 
     default:
       usage();
@@ -1474,7 +1519,7 @@ int main(int argc,char *argv[]){
 
   /* Set up Ogg output stream */
   srand(time(NULL));
-  ogg_stream_init(&to,rand()); /* oops, add one ot the above */
+  ogg_stream_init(&to,rand()); /* oops, add one to the above */
 
   /* initialize Vorbis assuming we have audio to compress. */
   if(audio && twopass!=1){
@@ -1536,6 +1581,11 @@ int main(int argc,char *argv[]){
     else ti.pixel_fmt=TH_PF_444;
     td=th_encode_alloc(&ti);
     th_info_clear(&ti);
+    if(td==NULL){
+      fprintf(stderr,"Error: Could not create an encoder instance.\n");
+      fprintf(stderr,"Check that video parameters are valid.\n");
+      exit(1);
+    }
     /* setting just the granule shift only allows power-of-two keyframe
        spacing.  Set the actual requested spacing. */
     ret=th_encode_ctl(td,TH_ENCCTL_SET_KEYFRAME_FREQUENCY_FORCE,
@@ -1728,6 +1778,7 @@ int main(int argc,char *argv[]){
       }
     }
     /* setup complete.  Raw processing loop */
+    if(!quiet){
       switch(passno){
       case 0: case 2:
         fprintf(stderr,"\rCompressing....                                          \n");
@@ -1736,6 +1787,7 @@ int main(int argc,char *argv[]){
         fprintf(stderr,"\rScanning first pass....                                  \n");
         break;
       }
+    }
     for(;;){
       int audio_or_video=-1;
       if(passno==1){
@@ -1786,7 +1838,7 @@ int main(int argc,char *argv[]){
           timebase=audiotime;
         }
       }
-      if(timebase > 0){
+      if(!quiet&&timebase>0){
         int hundredths=(int)(timebase*100-(long)timebase*100);
         int seconds=(long)timebase%60;
         int minutes=((long)timebase/60)%60;
@@ -1819,7 +1871,18 @@ int main(int argc,char *argv[]){
   if(outfile && outfile!=stdout)fclose(outfile);
   if(twopass_file)fclose(twopass_file);
 
-  fprintf(stderr,"\r   \ndone.\n\n");
+  clock_end=clock();
+  elapsed=(clock_end-clock_start)/(double)CLOCKS_PER_SEC;
+
+  if(!quiet){
+    fprintf(stderr,"\r   \n");
+    fprintf(stderr,"      %lld frames in %.3lf seconds: %.3lf Mpixel/s",
+      (long long)frames,elapsed,
+      (double)1e-6*frames*frame_w*frame_h/elapsed);
+    fprintf(stderr," %.2lfx",
+      (double)frames*video_fps_d/(elapsed*video_fps_n));
+    fprintf(stderr,"\ndone.\n\n");
+  }
 
   return(0);
 

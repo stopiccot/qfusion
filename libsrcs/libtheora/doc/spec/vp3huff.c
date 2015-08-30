@@ -11,7 +11,7 @@
  ********************************************************************
     function: dump the VP3.1 huffman tables in a form suitable for
 	inclusion in the spec.
-    last mod: $Id: vp3huff.c 14078 2007-10-31 21:24:44Z giles $
+    last mod: $Id$
 
  ********************************************************************/
 
