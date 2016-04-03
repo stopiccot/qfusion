@@ -1252,7 +1252,7 @@ r_imginfo_t ImgInfoFromSDLSurface(SDL_Surface* surface)
     return imginfo;
 }
 
-r_imginfo_t LoadJPG( const char *name, qbyte *(*allocbuf)( void *, size_t, const char *, int ), void *uptr )
+r_imginfo_t LoadJPG( const char *name, uint8_t *(*allocbuf)( void *, size_t, const char *, int ), void *uptr )
 {
     uint8_t* data = NULL;
     size_t datasize = 0;
@@ -1266,7 +1266,7 @@ r_imginfo_t LoadJPG( const char *name, qbyte *(*allocbuf)( void *, size_t, const
     return ImgInfoFromSDLSurface( surface );
 }
 
-r_imginfo_t LoadPNG( const char *name, qbyte *(*allocbuf)( void *, size_t, const char *, int ), void *uptr )
+r_imginfo_t LoadPNG( const char *name, uint8_t *(*allocbuf)( void *, size_t, const char *, int ), void *uptr )
 {
     uint8_t* data = NULL;
     size_t datasize = 0;
@@ -1280,10 +1280,10 @@ r_imginfo_t LoadPNG( const char *name, qbyte *(*allocbuf)( void *, size_t, const
     return ImgInfoFromSDLSurface( surface );
 }
 
-qboolean WriteJPG( const char *name, r_imginfo_t *info, int quality )
+bool WriteJPG( const char *name, r_imginfo_t *info, int quality )
 {
 	// TODO: Not supported by SDL2_image yet. We can save pngs or patch SDL2_image to support jpeg saving
-    return qfalse;
+    return false;
 }
 
 #endif
